@@ -112,8 +112,8 @@ namespace DP_dashboard
             //tempControllerInstanse = new TempControllerProtocol("COM16", 9600);
 
             //update versions
-            swVersions = new SwVersion("1.0.0", "", "1.0.0");
-
+            swVersions = new SwVersion("1.0.0", "", Application.ProductVersion);
+            
             // Calibration class init           
             classCalibrationInfo = new ClassCalibrationInfo(tempControllerInstanse, classDpCommunication, classMultiplexing, ClassDeltaProtocol, swVersions);
 

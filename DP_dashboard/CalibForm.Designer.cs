@@ -116,15 +116,15 @@
             this.pnl_calibrationPanel.Controls.Add(this.bt_startCalibration);
             this.pnl_calibrationPanel.Controls.Add(this.dgv_deviceData);
             this.pnl_calibrationPanel.Controls.Add(this.dgv_devicesQueue);
-            this.pnl_calibrationPanel.Location = new System.Drawing.Point(30, 32);
+            this.pnl_calibrationPanel.Location = new System.Drawing.Point(12, 12);
             this.pnl_calibrationPanel.Name = "pnl_calibrationPanel";
-            this.pnl_calibrationPanel.Size = new System.Drawing.Size(833, 650);
+            this.pnl_calibrationPanel.Size = new System.Drawing.Size(933, 636);
             this.pnl_calibrationPanel.TabIndex = 15;
             this.pnl_calibrationPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.pnl_calibrationPanel_Paint);
             // 
             // tb_logsPath
             // 
-            this.tb_logsPath.Location = new System.Drawing.Point(598, 543);
+            this.tb_logsPath.Location = new System.Drawing.Point(717, 548);
             this.tb_logsPath.Margin = new System.Windows.Forms.Padding(2);
             this.tb_logsPath.Name = "tb_logsPath";
             this.tb_logsPath.ReadOnly = true;
@@ -135,7 +135,7 @@
             // 
             // pb_calibProgressBar
             // 
-            this.pb_calibProgressBar.Location = new System.Drawing.Point(62, 603);
+            this.pb_calibProgressBar.Location = new System.Drawing.Point(139, 591);
             this.pb_calibProgressBar.Margin = new System.Windows.Forms.Padding(2);
             this.pb_calibProgressBar.Name = "pb_calibProgressBar";
             this.pb_calibProgressBar.Size = new System.Drawing.Size(507, 19);
@@ -145,7 +145,7 @@
             // 
             // tb_tempIndexAfterPause
             // 
-            this.tb_tempIndexAfterPause.Location = new System.Drawing.Point(721, 485);
+            this.tb_tempIndexAfterPause.Location = new System.Drawing.Point(840, 485);
             this.tb_tempIndexAfterPause.Margin = new System.Windows.Forms.Padding(2);
             this.tb_tempIndexAfterPause.Name = "tb_tempIndexAfterPause";
             this.tb_tempIndexAfterPause.Size = new System.Drawing.Size(76, 20);
@@ -156,7 +156,7 @@
             // 
             this.bt_pauseStartCalib.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bt_pauseStartCalib.ForeColor = System.Drawing.Color.Black;
-            this.bt_pauseStartCalib.Location = new System.Drawing.Point(598, 485);
+            this.bt_pauseStartCalib.Location = new System.Drawing.Point(717, 485);
             this.bt_pauseStartCalib.Name = "bt_pauseStartCalib";
             this.bt_pauseStartCalib.Size = new System.Drawing.Size(72, 33);
             this.bt_pauseStartCalib.TabIndex = 8;
@@ -166,7 +166,7 @@
             // 
             // bt_clear
             // 
-            this.bt_clear.Location = new System.Drawing.Point(6, 461);
+            this.bt_clear.Location = new System.Drawing.Point(6, 511);
             this.bt_clear.Margin = new System.Windows.Forms.Padding(2);
             this.bt_clear.Name = "bt_clear";
             this.bt_clear.Size = new System.Drawing.Size(50, 33);
@@ -180,7 +180,7 @@
             this.rtb_info.AcceptsTab = true;
             this.rtb_info.Location = new System.Drawing.Point(61, 437);
             this.rtb_info.Name = "rtb_info";
-            this.rtb_info.Size = new System.Drawing.Size(508, 152);
+            this.rtb_info.Size = new System.Drawing.Size(650, 131);
             this.rtb_info.TabIndex = 6;
             this.rtb_info.Text = "";
             // 
@@ -188,7 +188,7 @@
             // 
             this.bt_stopCalibration.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bt_stopCalibration.ForeColor = System.Drawing.Color.Black;
-            this.bt_stopCalibration.Location = new System.Drawing.Point(598, 437);
+            this.bt_stopCalibration.Location = new System.Drawing.Point(717, 437);
             this.bt_stopCalibration.Name = "bt_stopCalibration";
             this.bt_stopCalibration.Size = new System.Drawing.Size(72, 31);
             this.bt_stopCalibration.TabIndex = 5;
@@ -200,7 +200,7 @@
             // 
             this.bt_startCalibration.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bt_startCalibration.ForeColor = System.Drawing.Color.Black;
-            this.bt_startCalibration.Location = new System.Drawing.Point(721, 437);
+            this.bt_startCalibration.Location = new System.Drawing.Point(840, 437);
             this.bt_startCalibration.Name = "bt_startCalibration";
             this.bt_startCalibration.Size = new System.Drawing.Size(74, 31);
             this.bt_startCalibration.TabIndex = 3;
@@ -224,9 +224,9 @@
             this.col_Temp4_2,
             this.col_temp5_p1,
             this.col_Temp5_2});
-            this.dgv_deviceData.Location = new System.Drawing.Point(267, -2);
+            this.dgv_deviceData.Location = new System.Drawing.Point(326, 7);
             this.dgv_deviceData.Name = "dgv_deviceData";
-            this.dgv_deviceData.Size = new System.Drawing.Size(558, 416);
+            this.dgv_deviceData.Size = new System.Drawing.Size(598, 416);
             this.dgv_deviceData.TabIndex = 1;
             this.dgv_deviceData.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_deviceData_CellContentClick);
             // 
@@ -317,9 +317,9 @@
             this.col_serialNumber,
             this.DevicePositionOnBoard,
             this.BoardNumber});
-            this.dgv_devicesQueue.Location = new System.Drawing.Point(11, 1);
+            this.dgv_devicesQueue.Location = new System.Drawing.Point(6, 5);
             this.dgv_devicesQueue.Name = "dgv_devicesQueue";
-            this.dgv_devicesQueue.Size = new System.Drawing.Size(250, 416);
+            this.dgv_devicesQueue.Size = new System.Drawing.Size(314, 418);
             this.dgv_devicesQueue.TabIndex = 0;
             this.dgv_devicesQueue.CellEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_devicesQueue_CellEnter);
             // 
@@ -427,7 +427,7 @@
             this.pnl_TempData.Controls.Add(this.tb_currentTemperature);
             this.pnl_TempData.Controls.Add(this.label7);
             this.pnl_TempData.Controls.Add(this.label6);
-            this.pnl_TempData.Location = new System.Drawing.Point(915, 46);
+            this.pnl_TempData.Location = new System.Drawing.Point(951, 12);
             this.pnl_TempData.Name = "pnl_TempData";
             this.pnl_TempData.Size = new System.Drawing.Size(283, 199);
             this.pnl_TempData.TabIndex = 16;
@@ -552,9 +552,9 @@
             this.pnl_dpSelection.Controls.Add(this.bt_disConnectDP);
             this.pnl_dpSelection.Controls.Add(this.button1);
             this.pnl_dpSelection.Controls.Add(this.bt_connectDP);
-            this.pnl_dpSelection.Location = new System.Drawing.Point(915, 461);
+            this.pnl_dpSelection.Location = new System.Drawing.Point(951, 417);
             this.pnl_dpSelection.Name = "pnl_dpSelection";
-            this.pnl_dpSelection.Size = new System.Drawing.Size(283, 221);
+            this.pnl_dpSelection.Size = new System.Drawing.Size(283, 231);
             this.pnl_dpSelection.TabIndex = 13;
             // 
             // tb_dpSN
@@ -637,7 +637,7 @@
             this.panel2.Controls.Add(this.tb_pressCurrentPressure);
             this.panel2.Controls.Add(this.label1);
             this.panel2.Controls.Add(this.label2);
-            this.panel2.Location = new System.Drawing.Point(914, 251);
+            this.panel2.Location = new System.Drawing.Point(950, 217);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(284, 194);
             this.panel2.TabIndex = 17;
@@ -731,16 +731,17 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1218, 680);
+            this.ClientSize = new System.Drawing.Size(1244, 660);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.pnl_dpSelection);
             this.Controls.Add(this.pnl_calibrationPanel);
             this.Controls.Add(this.pnl_TempData);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "CalibForm";
-            this.Text = " Calibration tool 21/3/2017";
+            this.Text = "Calibration";
             this.TransparencyKey = System.Drawing.Color.Lime;
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CalibForm_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.pnl_calibrationPanel.ResumeLayout(false);
