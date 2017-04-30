@@ -15,22 +15,22 @@ namespace DP_dashboard.RIT_QA
         {
             using (RIT_QAEntities1 db = new RIT_QAEntities1())
             {
-                if (db.Devices.Find(row.MAC_ADDRESS) == null)
+                Device dev = db.Devices.Find(row.Barcode);
+                if (dev == null)
                 {
-                    Device dev = new Device();
+                    dev = new Device();
                     dev.Barcode = row.Barcode;
                     dev.MAC = row.MAC_ADDRESS;
                     dev.Date = DateTime.Now;
                     db.Devices.Add(dev);
-                    SaveDbChenges(db);
                 }
                 else
                 {
-                    db.Devices.Find(row.Barcode).MAC = row.MAC_ADDRESS;
-                    if (db.Devices.Find(row.Barcode).Date == null)
-                        db.Devices.Find(row.Barcode).Date = DateTime.Now;
-                    SaveDbChenges(db);
+                    dev.MAC = row.MAC_ADDRESS;
+                    if (dev.Date == null)
+                        dev.Date = DateTime.Now;
                 }
+                SaveDbChenges(db);
 
                 db.CalibrationDatas.Add(row);
 
