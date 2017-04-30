@@ -233,28 +233,40 @@ namespace DP_dashboard
 
                         case StateCheckDpsForLeakage:
                             short LeakageTestPressure = PlcBar2Adc(6.0F);
-                            float Tolerance =   0.05F / 6.0F * 100;
+                            //float Tolerance =   0.05F / 6.0F * 100;
 
                             // Set pressure for 6 bar
                             TraceInfo += "Setting pressure for leakage test..." + Environment.NewLine;
                             classDeltaProtocolInstanse.classDeltaWriteSetpoint(new List<short> { LeakageTestPressure });
-                            Thread.Sleep(100);
+                            
                             // Wair for stabilization
 
                             float CurrentPressure = ReadPressureFromPlc();
-                            int timeout = 0;
-                            while (PressureStableFlag & (Math.Abs(CurrentPressure - LeakageTestPressure) > 500))
+                            DateTime start = DateTime.Now;
+                            while (!(PressureStableFlag & (Math.Abs(CurrentPressure - LeakageTestPressure) <= 500)))
                             {
                                 Thread.Sleep(100);
-                                timeout += 100;
                                 CurrentPressure = ReadPressureFromPlc();
-                                if (timeout > 25000)
+                                if ((DateTime.Now - start).TotalSeconds >= 25)
                                 {
                                     TraceInfo += "Pressure source not stable, Process stoped" + Environment.NewLine;
                                     return;
                                 }
                             };
-                            TraceInfo += "Pressure set..." + Environment.NewLine;
+                            TraceInfo += "Pressure set. Waiting 30 second to test for leakage..." + Environment.NewLine;
+
+                            start = DateTime.Now;
+                            while ((DateTime.Now - start).TotalSeconds < 30)
+                            {
+                                Thread.Sleep(100);
+                                CurrentPressure = ReadPressureFromPlc();
+                                if (!PressureStableFlag)
+                                {
+                                    TraceInfo += "Pressure Leakage found, Process stoped" + Environment.NewLine;
+                                    return;
+                                }
+                            };
+                            /*
                             // Set MUX for first DPS
                             classMultiplexingInstanse.ConnectDpDevice(0);
 
@@ -270,19 +282,21 @@ namespace DP_dashboard
                             }
                             float L = classDpCommunicationInstanse.dpInfo.S1Pressure;
                             float R = classDpCommunicationInstanse.dpInfo.S2Pressure;
-                            // wair 30 sec
-                            TraceInfo += "Wait 30 sec" + Environment.NewLine;
+                            TraceInfo += " Left = " + L + ", Right = " + R;
+                           // wair 30 sec
+                           TraceInfo += "Wait 30 sec" + Environment.NewLine;
                             Thread.Sleep(30000);
                             // Read DPS pressure L1 and R1
                             TraceInfo += "Reading pressure from the DPS for the second time." + Environment.NewLine;
                             classDpCommunicationInstanse.DPgetDpInfo();
-                            if (!classDpCommunicationInstanse.WaitForResponse(1000))
+                            if (!classDpCommunicationInstanse.WaitForResponse(1000) | (L == 0) | ( R== 0 ))
                             {
                                 TraceInfo += "DPS communication timeout, Process stoped" + Environment.NewLine;
                             }
 
                             float L1 = classDpCommunicationInstanse.dpInfo.S1Pressure;
                             float R1 = classDpCommunicationInstanse.dpInfo.S2Pressure;
+                            TraceInfo += " Left = " + L1 + ", Right = " + R1;
                             // checked that the difference is less than 0.5%
                             TraceInfo += "Compering pressure read." + Environment.NewLine;
                             if ((Math.Abs(L1-L) > Math.Max(L1,L) * 0.05) || (Math.Abs(R1-R) > Math.Max(R1,R) * 0.05))
@@ -290,7 +304,7 @@ namespace DP_dashboard
                                 TraceInfo += "Pressure Leakage found, Process stoped" + Environment.NewLine;
                                 return;
                             }
-
+                            */
                             TraceInfo += "No leakage found, Process continues..." + Environment.NewLine;
                             StateChangeState(StateSendTempSetPoints);
                             break;
