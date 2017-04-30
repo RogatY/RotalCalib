@@ -96,7 +96,7 @@ namespace SerialQueryDriver
             }
             catch (ManagementException ex)
             {
-                System.Windows.Forms.MessageBox.Show("Fail to scan comports.\r\n\r\n(1)Try restart the application as a administrator\r\n(2)Check that you connected well the comport cable.");
+                System.Windows.Forms.MessageBox.Show("Fail to scan comports.\r\n\r\n(1)Try restart the application as a administrator\r\n(2)Check that you connected well the comport cable." + Environment.NewLine + ex.Message);
             }
 
 

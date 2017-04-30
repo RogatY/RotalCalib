@@ -34,9 +34,6 @@
       <HintPath>..\..\packages\log4net.2.0.6\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SerialPort_dll">
-      <HintPath>..\..\serial_port_dll\SerialPort_dll\bin\Debug\SerialPort_dll.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

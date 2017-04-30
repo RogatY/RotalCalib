@@ -443,7 +443,7 @@ namespace DeltaPlcCommunication
             }
             catch(Exception ex)
             {
-                incomingInfo.listDebugInfo.Add(string.Format("response timeout\r\n"));
+                incomingInfo.listDebugInfo.Add(string.Format("response timeout" + Environment.NewLine + ex.Message));
             }
             return rx;
         }

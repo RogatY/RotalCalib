@@ -203,7 +203,7 @@ namespace DpCommunication
                         Thread.Sleep(10);
                     }
                 }
-                catch (Exception ex)
+                catch //(Exception ex)
                 {
 
                     //SerialPortInstanse.port.DiscardInBuffer();

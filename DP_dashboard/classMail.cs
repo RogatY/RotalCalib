@@ -53,7 +53,7 @@ namespace DP_dashboard
                     smtp.Send(message);
                     return true;
                 }
-                catch (Exception ex)
+                catch //(Exception ex)
                 {
                     return false;
                 }

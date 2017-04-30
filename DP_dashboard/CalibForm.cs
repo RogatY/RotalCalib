@@ -333,6 +333,7 @@ namespace DP_dashboard
                 catch (Exception ex)
                 {
                     rtb_info.Text += "update GUI error\r\n";
+                    rtb_info.Text += ex.Message;
                 }
 
             }
@@ -886,7 +887,7 @@ namespace DP_dashboard
                     }                  
                 }
             }
-            catch(Exception ex)
+            catch//(Exception ex)
             { }
           }
 
@@ -910,7 +911,7 @@ namespace DP_dashboard
             {
                 if (tb_dpSN.Text.Length < 1)
                 {
-                    MessageBox.Show("Please enter valid SN.");
+                    MessageBox.Show("Please enter valid SN." + Environment.NewLine + ex.Message);
                 }
 
             }
@@ -934,7 +935,7 @@ namespace DP_dashboard
                 classCalibrationInfo.classDeltaProtocolInstanse.classDeltaWriteSetpoint(l);
                                                                 
             }
-            catch(Exception ex)
+            catch//(Exception ex)
             {
 
             }

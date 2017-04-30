@@ -120,7 +120,7 @@ namespace multiplexing_dll
                     //SerialPortInstanse.port.DiscardInBuffer();
                     //Array.Clear(incomingCommunicationBuffer, 0, incomingCommunicationBuffer.Length);
 
-                    SerialPortInstanse.ComPortErrorMessage = string.Format("Error: {0} connection error. function - DP Multiplexer.", SerialPortInstanse.port.PortName);                                                            
+                    SerialPortInstanse.ComPortErrorMessage = string.Format("Error: {0} connection error. function - DP Multiplexer." + Environment.NewLine + ex.Message, SerialPortInstanse.port.PortName);                                                            
                     SerialPortInstanse.ComPortOk = false;
                 }
             }

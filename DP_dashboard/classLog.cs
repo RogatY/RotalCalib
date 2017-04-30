@@ -121,7 +121,7 @@ namespace DP_dashboard
                 file.Close();
                 file = null;
             }
-            catch(Exception e)
+            catch//(Exception e)
             {
 
             }

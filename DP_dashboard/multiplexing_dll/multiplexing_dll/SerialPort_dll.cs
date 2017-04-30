@@ -37,7 +37,7 @@ namespace SerialPort_dll
                 }
                 catch (Exception ex)
                 {
-                    ComPortErrorMessage = string.Format("Error:{0} not exist. COM function - DP Multiplexer.", name);
+                    ComPortErrorMessage = string.Format("Error:{0} not exist. COM function - DP Multiplexer." + Environment.NewLine + ex.Message, name);
                     ComPortOk = false;
             }
 

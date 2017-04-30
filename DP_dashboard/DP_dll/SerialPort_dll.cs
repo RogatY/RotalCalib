@@ -43,7 +43,7 @@ namespace SerialPort_dll
             {
                 //MessageBox.Show(ex.Message);
                 ComPortOk = false;
-                ComPortErrorMessage = string.Format("Error:{0} not exist. COM function - DP comunication.", name);
+                ComPortErrorMessage = string.Format("Error:{0} not exist. COM function - DP comunication." + Environment.NewLine + ex.Message, name);
             }
 
         }

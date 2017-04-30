@@ -41,7 +41,7 @@ namespace DeltaPlcCommunication
             {
                 //throw new System.ArgumentException(ex.Message);
                 ComPortOk = false;
-                ComPortErrorMessage = string.Format("Error: {0} not exist. COM function - DELTA(PLC).", port.PortName);
+                ComPortErrorMessage = string.Format("Error: {0} not exist. COM function - DELTA(PLC)." + Environment.NewLine + ex.Message, port.PortName);
             }
 
         }
