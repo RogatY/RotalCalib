@@ -84,6 +84,7 @@ namespace DP_dashboard
         private const byte StateFinishAllCalibPoint                     = 0x0c;
         private const byte StatePressureStableError                     = 0x0d;
         private const byte StateTempStableError                         = 0x0e;
+        private const byte StateCheckDpsForLeakage                      = 0x0f;
         #endregion
 
         #region parameters
@@ -222,12 +223,69 @@ namespace DP_dashboard
                         case StateStartCalib:
                             {
                                 CurrentCalibDevice = classDevices[CurrentCalibDeviceIndex];
-                                StateChangeState(StateSendTempSetPoints);
+                                StateChangeState(StateCheckDpsForLeakage);
                                 CurrentCalibPressureIndex = 0;
                                 CurrentCalibTempIndex = 0;
 
                                 CriticalStates = true;
                             }
+                            break;
+
+                        case StateCheckDpsForLeakage:
+                            const short TEST_PRESSURE = 6;
+                            const float Tolerance = 0.1F;
+                           
+
+                            // Set pressure for 6 bar
+                            classDeltaProtocolInstanse.classDeltaWriteSetpoint(new List<short>{ TEST_PRESSURE });
+
+                            // Wair for stabilization
+                            
+                            float CurrentPressure = ReadPressureFromPlc();
+                            int timeout = 0;
+                            while (CurrentPressure < TEST_PRESSURE * (1- Tolerance) || CurrentPressure > TEST_PRESSURE * (1 + Tolerance))
+                            {
+                                Thread.Sleep(100);
+                                timeout += 100;
+                                CurrentPressure = ReadPressureFromPlc();
+                                if (timeout > 5000)
+                                {
+                                    ErrorMessage = "Pressure source not stable, Process stoped";
+                                    return;
+                                }
+                            };
+
+                            // Set MUX for first DPS
+                            classMultiplexingInstanse.ConnectDpDevice(0);
+
+                            // Read DPS pressure L and R
+                            classDpCommunicationInstanse.DPgetDpInfo();
+                            if (!classDpCommunicationInstanse.WaitForResponse(1000))
+                            {
+                                ErrorMessage = "DPS communication timeout, Process stoped";
+                                return;
+                            }
+                                float L = classDpCommunicationInstanse.dpInfo.S1Pressure;
+                                float R = classDpCommunicationInstanse.dpInfo.S2Pressure;
+                            // wair 30 sec
+                            Thread.Sleep(30000);
+                            // Read DPS pressure L1 and R1
+                            classDpCommunicationInstanse.DPgetDpInfo();
+                            if (!classDpCommunicationInstanse.WaitForResponse(1000))
+                            {
+                                ErrorMessage = "DPS communication timeout, Process stoped";
+                            }
+
+                            float L1 = classDpCommunicationInstanse.dpInfo.S1Pressure;
+                            float R1 = classDpCommunicationInstanse.dpInfo.S2Pressure;
+                            // checked that the difference is less than 0.5%
+                            if ((Math.Abs(L1-L) > 0.5/100) || (Math.Abs(R1-R) > 0.5/100))
+                            {
+                                ErrorMessage = "Pressure Leakage found, Process stoped";
+                                return;
+                            }
+
+                            StateChangeState(StateSendTempSetPoints);
                             break;
 
                         case StateSendPressureSetPoints:
@@ -584,7 +642,7 @@ namespace DP_dashboard
             catch (Exception err)
             {
                 ClassTempControllerInstanse.ComPortOk = false;
-                ClassTempControllerInstanse.ComPortErrorMessage = string.Format("Error: {0} connection error. function - Temp controller.", ClassTempControllerInstanse.sp.PortName);
+                ClassTempControllerInstanse.ComPortErrorMessage = string.Format("Error: {0} connection error. function - Temp controller." + Environment.NewLine + err.Message, ClassTempControllerInstanse.sp.PortName);
             }
             
             float value = float.Parse(values[0].ToString()) / 10;
@@ -769,9 +827,6 @@ namespace DP_dashboard
                 TraceInfo += "Error: Fail to valid temperatue set point\r\n" + "Current Target temperature on oven is " + value.ToString() + ":\r\n" + err.ToString();
                 return false;
             }
-
-
-            return true;
         }
 
         /// <summary>
