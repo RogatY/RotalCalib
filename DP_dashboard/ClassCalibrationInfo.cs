@@ -845,7 +845,7 @@ namespace DP_dashboard
             try
             {
                 SelectSetPoint(TEMP_SELECT_SET_POINT_REGISTER_ADDRESSS, 0);
-                Thread.Sleep(200);
+                Thread.Sleep(300);
                 if (ClassTempControllerInstanse.SendFc3(Convert.ToByte(Properties.Settings.Default.TempControllerSlaveAddress), TEMP_TARGET_SETPOINT_REGISTER_ADDRESSS, 1, ref values))
                 {
                     value = float.Parse(values[0].ToString());
