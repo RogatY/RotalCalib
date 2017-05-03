@@ -65,11 +65,30 @@ namespace DP_dashboard
 
         #region state machine states
         //state machine stats
-        public byte CurrentState = StateStartCalib;
-        public byte NextState = 0x00;
-        public byte PreviousState = 0x00;
+        public STATE_MACHINE CurrentState = STATE_MACHINE.StateStartCalib;
+        public STATE_MACHINE NextState = STATE_MACHINE.stateUnDefined;
+        public STATE_MACHINE PreviousState = STATE_MACHINE.stateUnDefined;
 
-
+        public enum STATE_MACHINE
+        {
+            stateUnDefined = 0,
+            StateStartCalib = 1,
+            StateSendPressureSetPoints,
+            StateSendTempSetPoints,
+            StateWaitToSetPressureStable,
+            StateWaitToTechnicanApprovePressure,
+            StateWaitToSetTempStable,
+            StateRunOfAllDp,
+            StateSaveValues,
+            StateSendValusToDP,
+            StateEndOneCalibPoint,
+            StateEndOneCalibTemp,
+            StateFinishAllCalibPoint,
+            StatePressureStableError,
+            StateTempStableError,
+            StateCheckDpsForLeakage
+        }
+        /*
         private const byte StateStartCalib                              = 0x01;
         private const byte StateSendPressureSetPoints                   = 0x02;
         private const byte StateSendTempSetPoints                       = 0x03;
@@ -85,6 +104,7 @@ namespace DP_dashboard
         private const byte StatePressureStableError                     = 0x0d;
         private const byte StateTempStableError                         = 0x0e;
         private const byte StateCheckDpsForLeakage                      = 0x0f;
+        */
         #endregion
 
         #region parameters
@@ -220,10 +240,10 @@ namespace DP_dashboard
 
                     switch (CurrentState)
                     {
-                        case StateStartCalib:
+                        case STATE_MACHINE.StateStartCalib:
                             {
                                 CurrentCalibDevice = classDevices[CurrentCalibDeviceIndex];
-                                StateChangeState(StateCheckDpsForLeakage);
+                                StateChangeState(STATE_MACHINE.StateCheckDpsForLeakage);
                                 CurrentCalibPressureIndex = 0;
                                 CurrentCalibTempIndex = 0;
 
@@ -231,7 +251,7 @@ namespace DP_dashboard
                             }
                             break;
 
-                        case StateCheckDpsForLeakage:
+                        case STATE_MACHINE.StateCheckDpsForLeakage:
                             short LeakageTestPressure = PlcBar2Adc(6.0F);
                             //float Tolerance =   0.05F / 6.0F * 100;
 
@@ -306,10 +326,10 @@ namespace DP_dashboard
                             }
                             */
                             TraceInfo += "No leakage found, Process continues..." + Environment.NewLine;
-                            StateChangeState(StateSendTempSetPoints);
+                            StateChangeState(STATE_MACHINE.StateSendTempSetPoints);
                             break;
 
-                        case StateSendPressureSetPoints:
+                        case STATE_MACHINE.StateSendPressureSetPoints:
                             {
                                 CriticalStates = true;
 
@@ -321,7 +341,7 @@ namespace DP_dashboard
 
                                     TimeFromSetPressurePointRequest = DateTime.Now;
 
-                                    StateChangeState(StateWaitToSetPressureStable);
+                                    StateChangeState(STATE_MACHINE.StateWaitToSetPressureStable);
                                     IncermentCalibPointStep = true;
                                 }
                                 else
@@ -330,13 +350,13 @@ namespace DP_dashboard
                                     // no need set 0 bar becouse i still set  when i sent temp setpoint.
                                     TimeFromSetPressurePointRequest = DateTime.Now;
 
-                                    StateChangeState(StateWaitToSetPressureStable);
+                                    StateChangeState(STATE_MACHINE.StateWaitToSetPressureStable);
                                     IncermentCalibPointStep = true;
                                 }
                             }
                             break;
 
-                        case StateSendTempSetPoints:
+                        case STATE_MACHINE.StateSendTempSetPoints:
                             {
                                 // send 0[bar] to PLC comtroller
                                 VentToRead0Bar(); // vent system after finish calib.
@@ -357,16 +377,16 @@ namespace DP_dashboard
                                     //classCalibrationSettings.TempToTimoutError +=  
 
                                     OvenSendTargeTempCounter = 0;
-                                    StateChangeState(StateWaitToSetTempStable);
+                                    StateChangeState(STATE_MACHINE.StateWaitToSetTempStable);
                                 }
                                 else if(OvenSendTargeTempCounter >= MAX_SEND_TARGET_TEMP_TO_OVEN)
                                 {
-                                    StateChangeState(StateTempStableError);
+                                    StateChangeState(STATE_MACHINE.StateTempStableError);
                                 }
                             }
                             break;
 
-                        case StateWaitToSetPressureStable:
+                        case STATE_MACHINE.StateWaitToSetPressureStable:
                             {
                                 if (CheckTimout(TimeFromSetPressurePointRequest, MAX_TIME_WAIT_TO_PRESSURE_SET_POINT))
                                 {
@@ -374,7 +394,7 @@ namespace DP_dashboard
 
                                     ResetPressureAndTemp();
 
-                                    StateChangeState(StatePressureStableError);
+                                    StateChangeState(STATE_MACHINE.StatePressureStableError);
                                 }
 
                                 else
@@ -382,42 +402,42 @@ namespace DP_dashboard
                                 {
                                     if (classCalibrationSettings.PressureAutoMode)
                                     {
-                                        StateChangeState(StateRunOfAllDp);
+                                        StateChangeState(STATE_MACHINE.StateRunOfAllDp);
                                     }
 
                                     else
                                     {
                                         classCalibrationSettings.AlertToTechnican = true;
-                                        StateChangeState(StateWaitToTechnicanApprovePressure);
+                                        StateChangeState(STATE_MACHINE.StateWaitToTechnicanApprovePressure);
                                     }
                                 }
 
                                 else if (CurrentCalibPressureIndex == 0)
                                 {
                                     Pressure0AfterVentStable = false;
-                                    StateChangeState(StateRunOfAllDp);
+                                    StateChangeState(STATE_MACHINE.StateRunOfAllDp);
                                 }
                             }
                             break;
                             
 
-                        case StateWaitToTechnicanApprovePressure:
+                        case STATE_MACHINE.StateWaitToTechnicanApprovePressure:
                             {
                                 if (classCalibrationSettings.TechnicianApproveGoNext)
                                 {
                                     classCalibrationSettings.TechnicianApproveGoNext = false;
-                                    StateChangeState(StateRunOfAllDp);
+                                    StateChangeState(STATE_MACHINE.StateRunOfAllDp);
                                 }
                             }
                             break;
 
-                        case StateWaitToSetTempStable:
+                        case STATE_MACHINE.StateWaitToSetTempStable:
                             {
 
                                 // timout error -> current skip time  + max time wait to temp
                                 if (CheckTimout(TimeFromSetTempPointRequest, classCalibrationSettings.MaxTimeWaitToTemp + classCalibrationSettings.TempSkipStartTime[CurrentCalibTempIndex]))
                                 {
-                                    StateChangeState(StateTempStableError);
+                                    StateChangeState(STATE_MACHINE.StateTempStableError);
 
                                     ResetPressureAndTemp();
 
@@ -429,7 +449,7 @@ namespace DP_dashboard
                                 {
                                     if (CheckTempStableOnOneDp(classCalibrationSettings.TempDeltaRange))
                                     {
-                                        StateChangeState(StateSendPressureSetPoints);
+                                        StateChangeState(STATE_MACHINE.StateSendPressureSetPoints);
                                     }
                                     else
                                     {
@@ -442,11 +462,12 @@ namespace DP_dashboard
                             }
                             break;
 
-                        case StateTempStableError:
+                        case STATE_MACHINE.StateTempStableError:
                             {
                                 if (NextAfterTempTimoutErrorEvent)
-                                {                                 
-                                    StateChangeState(StateSendTempSetPoints);
+                                {
+                                    OvenSendTargeTempCounter = 0;
+                                    StateChangeState(STATE_MACHINE.StateSendTempSetPoints);
                                     NextAfterTempTimoutErrorEvent = false;
                                 }
                                 TraceInfo += "Fail to set temperature.\r\n" + "Close calibration proccess.\r\n";
@@ -455,16 +476,16 @@ namespace DP_dashboard
                             }
                             break;
                             
-                        case StateRunOfAllDp:
+                        case STATE_MACHINE.StateRunOfAllDp:
                             {
                                 ConnectingToDP = true;
                                 WriteReadInfoFromDp();//loop of all dp's
                                 ConnectingToDP = false;
 
-                                StateChangeState(StateEndOneCalibPoint);
+                                StateChangeState(STATE_MACHINE.StateEndOneCalibPoint);
                             }
                             break;
-                        case StateEndOneCalibTemp:
+                        case STATE_MACHINE.StateEndOneCalibTemp:
                             {
                                 CurrentCalibPressureIndex = 0;
 
@@ -477,43 +498,43 @@ namespace DP_dashboard
                                 if (CurrentCalibTempIndex < classCalibrationSettings.TempUnderTestList.Count - 1)
                                 {
                                     CurrentCalibTempIndex++;
-                                    StateChangeState(StateSendTempSetPoints);
+                                    StateChangeState(STATE_MACHINE.StateSendTempSetPoints);
                                 }
                                 else
                                 {
-                                    StateChangeState(StateFinishAllCalibPoint);
+                                    StateChangeState(STATE_MACHINE.StateFinishAllCalibPoint);
                                 }
                             }
                             break;
-                        case StateEndOneCalibPoint:
+                        case STATE_MACHINE.StateEndOneCalibPoint:
                             {
                                 PressureStableFlag = false;
                                 if (CurrentCalibPressureIndex < classCalibrationSettings.PressureUnderTestList.Count - 1)
                                 {
                                     CurrentCalibPressureIndex++;
-                                    StateChangeState(StateSendPressureSetPoints);
+                                    StateChangeState(STATE_MACHINE.StateSendPressureSetPoints);
                                 }
                                 else
                                 {
-                                    StateChangeState(StateEndOneCalibTemp);
+                                    StateChangeState(STATE_MACHINE.StateEndOneCalibTemp);
                                 }
                             }
                             break;
-                        case StateFinishAllCalibPoint:
+                        case STATE_MACHINE.StateFinishAllCalibPoint:
                             {
                                 DoCalibration = false;
                                 FinishCalibrationEvent = true;
 
                                 ResetPressureAndTemp();
 
-                                StateChangeState(StateStartCalib);
+                                StateChangeState(STATE_MACHINE.StateStartCalib);
                             }
                             break;
-                        case StatePressureStableError:
+                        case STATE_MACHINE.StatePressureStableError:
                             {
                                 if (NextAfterPressureTimoutErrorEvent)
                                 {
-                                    StateChangeState(StateSendPressureSetPoints);
+                                    StateChangeState(STATE_MACHINE.StateSendPressureSetPoints);
                                     NextAfterPressureTimoutErrorEvent = false;
                                 }
                             }
@@ -549,13 +570,13 @@ namespace DP_dashboard
         /// discription: this function change state machine state
         /// <param name="nextState"></param>
         /// </summary>
-        public void StateChangeState(byte nextState)
+        public void StateChangeState(STATE_MACHINE nextState)
         {
             PreviousState = CurrentState;
             CurrentState = nextState;
             ChengeStateEvent = true;
 
-            Logger.Debug("Calibration state machine: from 111 to 222");
+            Logger.Debug("Calibration state machine: from:"+ Enum.GetName(typeof(STATE_MACHINE),CurrentState) + " to:" + Enum.GetName(typeof(STATE_MACHINE), nextState));
         }
 
         /// <summary>
@@ -563,8 +584,8 @@ namespace DP_dashboard
         /// </summary>
         public void ResetStateMachine()
         {
-            PreviousState = StateStartCalib;
-            CurrentState = StateStartCalib;
+            PreviousState = STATE_MACHINE.StateStartCalib;
+            CurrentState = STATE_MACHINE.StateStartCalib;
 
             CurrentCalibPressureIndex = 0;
             CurrentCalibTempIndex = 0;
@@ -573,8 +594,8 @@ namespace DP_dashboard
 
         public void StateMachineReset()
         {
-            PreviousState = StateStartCalib;
-            CurrentState = StateStartCalib;
+            PreviousState = STATE_MACHINE.StateStartCalib;
+            CurrentState = STATE_MACHINE.StateStartCalib;
             ChengeStateEvent = false;
         }
 
@@ -584,7 +605,7 @@ namespace DP_dashboard
         /// </summary>
         public void StateMachineResetAfterPause(byte tempIndex)
         {
-            CurrentState = StateSendTempSetPoints;
+            CurrentState = STATE_MACHINE.StateSendTempSetPoints;
             ChengeStateEvent = false;
             CurrentCalibTempIndex = tempIndex;
             CurrentCalibPressureIndex = 0;
