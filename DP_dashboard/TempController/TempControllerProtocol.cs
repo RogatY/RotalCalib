@@ -173,11 +173,21 @@ namespace TempController_dll
         #endregion
 
         #region Get Response
-        private void GetResponse(ref byte[] response)
+        private void GetResponse(ref byte[] response, int wait = 250)
         {
             //There is a bug in .Net 2.0 DataReceived Event that prevents people from using this
             //event as an interrupt to handle data (it doesn't fire all of the time).  Therefore
             //we have to use the ReadByte command for a fixed length as it's been shown to be reliable.
+            DateTime start = DateTime.Now;
+            while (sp.BytesToRead != response.Length)
+            {
+                if ((DateTime.Now - start).TotalMilliseconds >= wait)
+                    throw (new Exception("Communication timeout after " + wait + " mSec. expected to get " + response.Length + " got " + sp.BytesToRead));
+
+                Thread.Sleep(10);
+            }
+
+
             for (int i = 0; i < response.Length; i++)
             {
                 response[i] = (byte)(sp.ReadByte());
