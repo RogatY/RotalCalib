@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DP_dashboard", "DP_dashboard.csproj", "{C7C24B9D-B15D-416C-8FC8-D7F089A8CD5E}"
 EndProject
@@ -13,9 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DP_dll", "DP_dll\DP_dll.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempController", "TempController\TempController.csproj", "{93B04CBF-C68C-45A7-B423-810C8E776737}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RotalCalibrationSetup", "..\RotalCalibrationSetup\RotalCalibrationSetup.vdproj", "{F3B5ADB1-5B5C-4375-80BF-4805804DF274}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialQueryDriver", "SerialQueryDriver\SerialQueryDriver.csproj", "{662B0588-1870-437B-B42C-FD9EC0BC1D17}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CalibrationSetup", "..\CalibrationSetup\CalibrationSetup.vdproj", "{9997C5A6-51C1-486C-87E6-9167712968B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,12 +43,13 @@ Global
 		{93B04CBF-C68C-45A7-B423-810C8E776737}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93B04CBF-C68C-45A7-B423-810C8E776737}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93B04CBF-C68C-45A7-B423-810C8E776737}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3B5ADB1-5B5C-4375-80BF-4805804DF274}.Debug|Any CPU.ActiveCfg = Debug
-		{F3B5ADB1-5B5C-4375-80BF-4805804DF274}.Release|Any CPU.ActiveCfg = Release
 		{662B0588-1870-437B-B42C-FD9EC0BC1D17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{662B0588-1870-437B-B42C-FD9EC0BC1D17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{662B0588-1870-437B-B42C-FD9EC0BC1D17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{662B0588-1870-437B-B42C-FD9EC0BC1D17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9997C5A6-51C1-486C-87E6-9167712968B6}.Debug|Any CPU.ActiveCfg = Debug
+		{9997C5A6-51C1-486C-87E6-9167712968B6}.Release|Any CPU.ActiveCfg = Release
+		{9997C5A6-51C1-486C-87E6-9167712968B6}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
