@@ -3,16 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="multiplexingComPort" Type="System.String" Scope="User">
-      <Value Profile="(Default)">COM12</Value>
+      <Value Profile="(Default)">COM6</Value>
     </Setting>
     <Setting Name="plcComPort" Type="System.String" Scope="User">
-      <Value Profile="(Default)">COM1</Value>
+      <Value Profile="(Default)">COM23</Value>
     </Setting>
     <Setting Name="dpComPort" Type="System.String" Scope="User">
-      <Value Profile="(Default)">COM2</Value>
+      <Value Profile="(Default)">COM5</Value>
     </Setting>
     <Setting Name="TempControllerComPort" Type="System.String" Scope="User">
-      <Value Profile="(Default)">COM8</Value>
+      <Value Profile="(Default)">COM4</Value>
     </Setting>
     <Setting Name="LogPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\work\Rotal\Rotal calibration\project\RotalCalib\DP_dashboard\bin\Debug\Logs</Value>
@@ -39,7 +39,7 @@
       <Value Profile="(Default)">FTDIBUS\VID_0403+PID_6001+FT9FYCYCA\0000_0</Value>
     </Setting>
     <Setting Name="TempControllerComPortID" Type="System.String" Scope="User">
-      <Value Profile="(Default)">USB\VID_1A86&amp;PID_7523\6&amp;390363f7&amp;0&amp;3_0</Value>
+      <Value Profile="(Default)">FTDIBUS\VID_0403+PID_6001+FT9FYCYCA\0000_0</Value>
     </Setting>
     <Setting Name="LicenseServerURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://db-server:1234/license?mac=</Value>

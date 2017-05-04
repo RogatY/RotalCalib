@@ -79,7 +79,7 @@ namespace DP_dashboard
             currentForm = this;
 
             // check the names of the comports...
-
+            /*
             classSerialQueryDriver.GetComPortName(
                                                     ref MutiplexingComPortName,
                                                     Properties.Settings.Default.MultiplexerComPortID,
@@ -89,25 +89,29 @@ namespace DP_dashboard
                                                     Properties.Settings.Default.DpComPortID,
                                                     ref TempControllerComPortName,
                                                     Properties.Settings.Default.TempControllerComPortID);
+                                                    */
 
 
 
             // plc protocol init          
+            PlcComPortName = Properties.Settings.Default.plcComPort;
             PLCinfo = new DeltaIncomingInformation();
             ClassDeltaProtocol = new classDeltaProtocol(PlcComPortName, 9600, PLCinfo);
 
             // multplexing protocol init 
+            MutiplexingComPortName = Properties.Settings.Default.multiplexingComPort;
             MultiplexingInfo = new MultiplexingIncomingInformation();
             classMultiplexing = new classMultiplexing(MutiplexingComPortName, 115200, MultiplexingInfo);
 
 
             // DP protocol init
-
+            DpComPortName = Properties.Settings.Default.dpComPort;
             DPinfo = new DpIncomingInformation();
             classDpCommunication = new ClassDpCommunication(DpComPortName, 115200, DPinfo);
 
 
             // Temp controller protocol init
+            TempControllerComPortName = Properties.Settings.Default.TempControllerComPort;
             tempControllerInstanse = new TempControllerProtocol(TempControllerComPortName, 9600, true);
             //tempControllerInstanse = new TempControllerProtocol("COM16", 9600);
 

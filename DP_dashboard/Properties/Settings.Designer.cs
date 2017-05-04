@@ -25,7 +25,7 @@ namespace DP_dashboard.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("COM12")]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM6")]
         public string multiplexingComPort {
             get {
                 return ((string)(this["multiplexingComPort"]));
@@ -37,7 +37,7 @@ namespace DP_dashboard.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("COM1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM23")]
         public string plcComPort {
             get {
                 return ((string)(this["plcComPort"]));
@@ -49,7 +49,7 @@ namespace DP_dashboard.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("COM2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM5")]
         public string dpComPort {
             get {
                 return ((string)(this["dpComPort"]));
@@ -61,7 +61,7 @@ namespace DP_dashboard.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("COM8")]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM4")]
         public string TempControllerComPort {
             get {
                 return ((string)(this["TempControllerComPort"]));
@@ -170,7 +170,7 @@ namespace DP_dashboard.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("USB\\VID_1A86&PID_7523\\6&390363f7&0&3_0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("FTDIBUS\\VID_0403+PID_6001+FT9FYCYCA\\0000_0")]
         public string TempControllerComPortID {
             get {
                 return ((string)(this["TempControllerComPortID"]));
