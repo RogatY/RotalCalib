@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
-
+using System.Threading.Tasks;
 
 namespace DP_dashboard
 {
@@ -13,7 +14,7 @@ namespace DP_dashboard
         private static byte[] license = null;
         private static string licenseType = "";
         private static string dpMac = "";
-
+        //private static bool waiting = false;
 
         public LicenceSupport(string Url = "")
         {
@@ -32,48 +33,52 @@ namespace DP_dashboard
                 licenseType = licTypy;
                 dpMac = mac;
 
-                int i = 0;
-                new Thread(Generate).Start();
-                while (!ready)
-                {
-                    Thread.Sleep(10);
-                    i += 10;
-                    if (i > 3000)
-                        break;
-                }
+                return Generate();
             }           
-            return license;
+            return null;
         }
 
-        private static async void Generate()
-        {           
+        private static byte[] Generate()
+        {
             ready = false;
-           
             // ... Use HttpClient.
             using (HttpClient client = new HttpClient())
-            using (HttpResponseMessage response = await client.GetAsync(licenseServerUrl + dpMac + "&capabilities=" + licenseType))
-            using (HttpContent content = response.Content)
             {
-                try
+                var tResp = client.GetAsync(licenseServerUrl + dpMac + "&capabilities=" + licenseType);
+                tResp.Wait();
+                HttpResponseMessage response = tResp.Result;
+                using (HttpContent content = response.Content)
                 {
-                    string result = await content.ReadAsStringAsync();
-                    key k = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<key>(result);
-
-                    if (k.Validation)
+                    try
                     {
-                        license = StringToByteArray(k.Key);
+                        var t = content.ReadAsStringAsync();
+                        t.Wait();
+                        string result = t.Result;
+
+
+                        int len = result.IndexOf('}') - result.IndexOf('{') + 1;
+                        result = result.Substring(result.IndexOf('{'), len);
+                        key k = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<key>(result);
+
+                        if (k.Validation)
+                        {
+                            Console.WriteLine("License !!!! " + k.Key);
+                            license = StringToByteArray(k.Key);
+                        }
+                        else
+                        {
+                            license = null;
+                        }
                     }
-                    else
+                    catch //(Exception ex)
                     {
                         license = null;
                     }
+                    ready = true;
                 }
-                catch
-                {
-                    license = null;
-                }
-                ready = true;
             }
+
+            return license;
         }
 
         public class key

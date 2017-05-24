@@ -361,6 +361,9 @@ namespace DP_dashboard
                                 // send 0[bar] to PLC comtroller
                                 VentToRead0Bar(); // vent system after finish calib.
 
+                                TraceInfo += "Set temp : " + classCalibrationSettings.TempUnderTestList[CurrentCalibTempIndex]+"\r\n";
+
+
                                 WriteTempSetPoint(TEMP_SET_POINT_1_REGISTER_ADDRESSS, classCalibrationSettings.TempUnderTestList[CurrentCalibTempIndex]);
                                 SelectSetPoint(TEMP_SELECT_SET_POINT_REGISTER_ADDRESSS, 0);
                                 OvenSendTargeTempCounter++;
@@ -437,6 +440,7 @@ namespace DP_dashboard
                                 // timout error -> current skip time  + max time wait to temp
                                 if (CheckTimout(TimeFromSetTempPointRequest, classCalibrationSettings.MaxTimeWaitToTemp + classCalibrationSettings.TempSkipStartTime[CurrentCalibTempIndex]))
                                 {
+                                    TraceInfo += "Timeout waiting for temp set \r\n";
                                     StateChangeState(STATE_MACHINE.StateTempStableError);
 
                                     ResetPressureAndTemp();
@@ -444,17 +448,19 @@ namespace DP_dashboard
                                     TempTimoutErrorEvent = true;
                                 }
                                 else
-                                    //if (CheckTimout(TimeFromSetTempPointRequest, 1))//debug mode
-                                if (CheckTimout(TimeFromSetTempPointRequest, classCalibrationSettings.TempSkipStartTime[CurrentCalibTempIndex]))
                                 {
-                                    if (CheckTempStableOnOneDp(classCalibrationSettings.TempDeltaRange))
+                                    //if (CheckTimout(TimeFromSetTempPointRequest, 1))//debug mode
+                                    if (CheckTimout(TimeFromSetTempPointRequest, classCalibrationSettings.TempSkipStartTime[CurrentCalibTempIndex]))
                                     {
-                                        StateChangeState(STATE_MACHINE.StateSendPressureSetPoints);
+                                        if (CheckTempStableOnOneDp(classCalibrationSettings.TempDeltaRange))
+                                        {
+                                            StateChangeState(STATE_MACHINE.StateSendPressureSetPoints);
+                                        }
+                                        else
+                                        {
+                                            Thread.Sleep(TEMP_WAIT_BETWEEN_TWO_SMPLINGS_CYCLE * 1000);
+                                        }
                                     }
-                                    else
-                                    {
-                                        Thread.Sleep(TEMP_WAIT_BETWEEN_TWO_SMPLINGS_CYCLE * 1000);
-                                    }                                   
                                 }
 
                                 //StateChangeState(StateSendPressureSetPoints);
@@ -753,14 +759,15 @@ namespace DP_dashboard
                                 //set license on the device
                                 classDpCommunicationInstanse.LicenseAck = false;
                                 //MAC + Capabilities
-                                byte[] license = new LicenceSupport().GetKey(classCalibrationSettings.DeviceLicens, classDevices[DpPtr].DeviceMacAddress);
+                                LicenceSupport licSup = new LicenceSupport();
+                                byte[] license =  licSup.GetKey(classCalibrationSettings.DeviceLicens, classDevices[DpPtr].DeviceMacAddress);
 
 
                                 if(license != null)
                                     if (license.Length > 0)
                                         classDpCommunicationInstanse.SendDpLicense(license);
-
-                                Thread.Sleep(1000);
+                                TraceInfo += "Sent license wait for ack " +DateTime.Now + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " license is: " + Encoding.UTF8.GetString(license, 0, license.Length) + ".\r\n";
+                                Thread.Sleep(2000);
                                 if(classDpCommunicationInstanse.LicenseAck)
                                 {
                                     classDpCommunicationInstanse.LicenseAck = false;
