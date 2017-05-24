@@ -346,6 +346,7 @@ namespace TempController_dll
 
         private void WriteToFile(string header,byte [] buffer)
         {
+            header = DateTime.Now.ToString() + " " + header;
             for (int i = 0; i < buffer.Length; i++)
                 header += String.Format("{0:X2}", buffer[i]);
 
