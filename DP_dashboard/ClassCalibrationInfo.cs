@@ -763,9 +763,15 @@ namespace DP_dashboard
                                 byte[] license =  licSup.GetKey(classCalibrationSettings.DeviceLicens, classDevices[DpPtr].DeviceMacAddress);
 
 
-                                if(license != null)
+                                if (license != null)
+                                {
                                     if (license.Length > 0)
                                         classDpCommunicationInstanse.SendDpLicense(license);
+                                }
+                                else
+                                {
+                                    TraceInfo += "Error - Can't get license for " + classDevices[DpPtr].DeviceBarcode + ". (got null)";
+                                }
                                 TraceInfo += "Sent license wait for ack " +DateTime.Now + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " license is: " + Encoding.UTF8.GetString(license, 0, license.Length) + ".\r\n";
                                 Thread.Sleep(2000);
                                 if(classDpCommunicationInstanse.LicenseAck)

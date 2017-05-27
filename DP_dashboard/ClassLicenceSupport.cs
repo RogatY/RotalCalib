@@ -8,13 +8,10 @@ namespace DP_dashboard
 {
     public class LicenceSupport
     {
-
         private static string licenseServerUrl = Properties.Settings.Default.LicenseServerURL;
-        private static bool ready = false;
         private static byte[] license = null;
         private static string licenseType = "";
         private static string dpMac = "";
-        //private static bool waiting = false;
 
         public LicenceSupport(string Url = "")
         {
@@ -38,9 +35,8 @@ namespace DP_dashboard
             return null;
         }
 
-        private static byte[] Generate()
+        private byte[] Generate()
         {
-            ready = false;
             // ... Use HttpClient.
             using (HttpClient client = new HttpClient())
             {
@@ -74,7 +70,6 @@ namespace DP_dashboard
                     {
                         license = null;
                     }
-                    ready = true;
                 }
             }
 
