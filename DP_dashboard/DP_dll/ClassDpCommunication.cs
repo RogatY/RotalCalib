@@ -195,9 +195,9 @@ namespace DpCommunication
                         {
                             SerialPortInstanse.port.Read(incomingCommunicationBuffer, i, 1);
                         }
-                        SerialPortInstanse.Semaphore = true;
                         analyzeIncomingCommunicationPacket(incomingCommunicationBuffer);
                         Array.Clear(incomingCommunicationBuffer, 0, incomingCommunicationBuffer.Length);
+                        SerialPortInstanse.Semaphore = true;
                     }
 
                     else

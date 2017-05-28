@@ -48,7 +48,16 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="StationId" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="Batch" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="FwVersion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">2.6.007</Value>
+    </Setting>
+    <Setting Name="UserId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -59,7 +59,12 @@ namespace DP_dashboard
             InitializeComponent();
             DpProtocolInstanse = dpProtocolInstanse;
 
-            Text += " Ver " + ver; 
+            Text += " Ver " + ver;
+            tb_batch.Text = Properties.Settings.Default.Batch;
+            tb_fwVersion.Text = Properties.Settings.Default.FwVersion;
+            tb_stationId.Text = Properties.Settings.Default.StationId.ToString();
+            tb_userName.Text = Properties.Settings.Default.UserId;
+
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -82,6 +87,12 @@ namespace DP_dashboard
 
         private void bt_saveCalibPoint_Click(object sender, EventArgs e)
         {
+
+            Properties.Settings.Default.Batch = tb_batch.Text;
+            Properties.Settings.Default.FwVersion = tb_fwVersion.Text;
+            try { Properties.Settings.Default.StationId = Int32.Parse(tb_stationId.Text); } catch { }
+            Properties.Settings.Default.UserId = tb_userName.Text;
+
             calibForm.classCalibrationInfo.classCalibrationSettings.TempUnderTestList.Clear();
             calibForm.classCalibrationInfo.classCalibrationSettings.PressureUnderTestList.Clear();
             calibForm.classCalibrationInfo.classCalibrationSettings.TempSkipStartTime.Clear();

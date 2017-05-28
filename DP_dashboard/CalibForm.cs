@@ -539,25 +539,32 @@ namespace DP_dashboard
         private void UpdateDeviceTable()
         {
             dgv_devicesQueue.Rows.Clear();
-            for (int i = 0; i < classCalibrationInfo.DpCountAxist; i++)
+            //for (int i = 0; i < classCalibrationInfo.DpCountAxist; i++)
+            for (int i = 0; i < 16; i++) 
             {
-                dgv_devicesQueue.Rows.Add(i.ToString(),
-                    classCalibrationInfo.classDevices[i].DeviceMacAddress.ToString(),
-                    classCalibrationInfo.classDevices[i].DeviceBarcode.ToString(),
-                    classCalibrationInfo.classDevices[i].PositionOnBoard.ToString(),
-                    classCalibrationInfo.classDevices[i].BoardNumber.ToString());
+                if (classCalibrationInfo.classDevices[i] != null)
+                {
+                    dgv_devicesQueue.Rows.Add(i.ToString(),
+                        classCalibrationInfo.classDevices[i].DeviceMacAddress.ToString(),
+                        classCalibrationInfo.classDevices[i].DeviceBarcode.ToString(),
+                        classCalibrationInfo.classDevices[i].PositionOnBoard.ToString(),
+                        classCalibrationInfo.classDevices[i].BoardNumber.ToString());
+                }
             }
         }
         private void UpdateDataTable(string barcode)
         {
             bool ExistDevice = false;
             int i = 0;
-            for (i = 0; i < classCalibrationInfo.DpCountAxist; i++)
+            for (i = 0; i < 16; i++)
             {
-                if (classCalibrationInfo.classDevices[i].DeviceBarcode == barcode)
+                if (classCalibrationInfo.classDevices[i] != null)
                 {
-                    ExistDevice = true;
-                    break;
+                    if (classCalibrationInfo.classDevices[i].DeviceBarcode == barcode)
+                    {
+                        ExistDevice = true;
+                        break;
+                    }
                 }
             }
 
@@ -736,12 +743,15 @@ namespace DP_dashboard
             for (int i = 0; i < dgv_devicesQueue.Rows.Count - 1; i++)
             {
                 int j = 0;
-                while (j < classCalibrationInfo.DpCountAxist)
+                while (j < 16)
                 {
-                    if (dgv_devicesQueue.Rows[i].Cells[2].Value.ToString().Equals(classCalibrationInfo.classDevices[j].DeviceSerialNumber.ToString()))
+                    if (classCalibrationInfo.classDevices[j] != null)
                     {
-                        DGVSetCellColor(dgv_devicesQueue, 1, i, classCalibrationInfo.classDevices[j].deviceStatus == DeviceStatus.Pass ? Color.Green : Color.Red);
-                        break;
+                        if (dgv_devicesQueue.Rows[i].Cells[2].Value.ToString().Equals(classCalibrationInfo.classDevices[j].DeviceSerialNumber.ToString()))
+                        {
+                            DGVSetCellColor(dgv_devicesQueue, 1, i, classCalibrationInfo.classDevices[j].deviceStatus == DeviceStatus.Pass ? Color.Green : Color.Red);
+                            break;
+                        }
                     }
                     j++;
                 }

@@ -16,7 +16,7 @@ namespace SerialPort_dll
         public string ComPortErrorMessage = "";
         public object MessageBox { get; private set; }
         private volatile bool _transmitSemaphore = true;
-
+        private object locker = new object();
         public bool IsComOpen()
         {
             return port.IsOpen;
@@ -52,7 +52,18 @@ namespace SerialPort_dll
 
         public void Send(byte[] data, int size)
         {
-            if (!_transmitSemaphore)
+            bool transmit_ok = false;
+            lock (locker)
+            {
+                if (_transmitSemaphore)
+                {
+                    _transmitSemaphore = false;
+                    transmit_ok = true;
+                }
+
+            }
+
+            if (!transmit_ok)
             {
                 Stopwatch sw = new Stopwatch();
                 sw.Start();
@@ -61,7 +72,7 @@ namespace SerialPort_dll
                     Thread.Sleep(10);
                 }
             }
-
+            
             try
             {
                 if (port.IsOpen)
