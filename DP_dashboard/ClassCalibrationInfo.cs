@@ -193,6 +193,7 @@ namespace DP_dashboard
         #endregion
 
         #region c'tor
+
         public ClassCalibrationInfo(TempControllerProtocol tempControllerInstanse, ClassDpCommunication ClassDpCommunication, classMultiplexing ClassMultiplexing, classDeltaProtocol classDeltaIncomingInformation, SwVersion version, IGUI gui)
         {
 
@@ -764,48 +765,51 @@ namespace DP_dashboard
                                 classDpCommunicationInstanse.LicenseAck = false;
                                 //MAC + Capabilities
                                 LicenceSupport licSup = new LicenceSupport();
-                                byte[] license =  licSup.GetKey(classCalibrationSettings.DeviceLicens, classDevices[DpPtr].DeviceMacAddress);
+                                byte[] license = licSup.GetKey(classCalibrationSettings.DeviceLicens, classDevices[DpPtr].DeviceMacAddress);
 
 
-                                if(license != null)
+                                if (license != null)
+                                {
                                     if (license.Length > 0)
                                         classDpCommunicationInstanse.SendDpLicense(license);
-                                
-                                _gui.UpdateTraceInfo ("Sent license wait for ack " +DateTime.Now + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " license is: " + Encoding.UTF8.GetString(license, 0, license.Length) + ".\r\n");
-                                Thread.Sleep(2000);
-                                if(classDpCommunicationInstanse.LicenseAck)
-                                {
-                                    classDpCommunicationInstanse.LicenseAck = false;
-                                    _gui.UpdateTraceInfo("License msg: SN = " + DateTime.Now   + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " license is: " + Encoding.UTF8.GetString(license, 0, license.Length) + ".\r\n");
-                                }
-                                else
-                                {
-                                    //Not license response
-                                    _gui.UpdateTraceInfo("License Error: " +  DateTime.Now + " SN = " + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " fail to set the license.\r\n");
 
+                                    _gui.UpdateTraceInfo("Sent license wait for ack " + DateTime.Now + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " license is: " + Encoding.UTF8.GetString(license, 0, license.Length) + ".\r\n");
+                                    Thread.Sleep(2000);
+                                    if (classDpCommunicationInstanse.LicenseAck)
+                                    {
+                                        classDpCommunicationInstanse.LicenseAck = false;
+
+                                        _gui.UpdateTraceInfo("License msg: SN = " + DateTime.Now + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " license is: " + Encoding.UTF8.GetString(license, 0, license.Length) + ".\r\n");
+                                    }
+                                    else
+                                    {
+                                        //Not license response
+                                        _gui.UpdateTraceInfo("License Error: " + DateTime.Now + " SN = " + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " fail to set the license.\r\n");
+
+                                        classDevices[DpPtr].deviceStatus = DeviceStatus.Fail;
+                                    }
+
+
+
+                                    //send end calibration CMD
+                                    classDpCommunicationInstanse.SendEndCalibration();
+                                    if (classDevices[DpPtr].deviceStatus == DeviceStatus.Wait)
+                                    {
+                                        classDevices[DpPtr].deviceStatus = DeviceStatus.Pass;
+                                    }
+                                }
+                                j = MAX_ALLOW_SEND_GET_INFO_CMD; // break the for loop...
+                            }
+                            else
+                            {
+                                if (j == MAX_ALLOW_SEND_GET_INFO_CMD)
+                                {
                                     classDevices[DpPtr].deviceStatus = DeviceStatus.Fail;
                                 }
-
-
-
-                                //send end calibration CMD
-                                classDpCommunicationInstanse.SendEndCalibration();
-                                if (classDevices[DpPtr].deviceStatus == DeviceStatus.Wait)
-                                {
-                                    classDevices[DpPtr].deviceStatus = DeviceStatus.Pass;
-                                }
-                            }
-                            j = MAX_ALLOW_SEND_GET_INFO_CMD; // break the for loop...
-                        }
-                        else
-                        {
-                            if (j == MAX_ALLOW_SEND_GET_INFO_CMD)
-                            {
-                                classDevices[DpPtr].deviceStatus = DeviceStatus.Fail;
                             }
                         }
+                        DpPtr++;
                     }
-                    DpPtr++;
                 }
             }
         }
