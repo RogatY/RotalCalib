@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using SerialPort_dll;
-
-
+using System.Diagnostics;
 
 namespace DpCommunication
 {
@@ -158,6 +157,9 @@ namespace DpCommunication
 
         public bool WaitForResponse(int mSecToWait)
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             do
             {
                 if (NewDpInfoEvent == true)
@@ -166,8 +168,8 @@ namespace DpCommunication
                     return true;
                 }                
                 Thread.Sleep(10);
-                mSecToWait -= 10;
-            } while (mSecToWait > 0);
+
+            } while (sw.ElapsedMilliseconds <  mSecToWait);
             return false;
         }
 
@@ -193,14 +195,14 @@ namespace DpCommunication
                         {
                             SerialPortInstanse.port.Read(incomingCommunicationBuffer, i, 1);
                         }
-
+                        SerialPortInstanse.Semaphore = true;
                         analyzeIncomingCommunicationPacket(incomingCommunicationBuffer);
                         Array.Clear(incomingCommunicationBuffer, 0, incomingCommunicationBuffer.Length);
                     }
 
                     else
                     {
-                        Thread.Sleep(10);
+                        Thread.Sleep(1);
                     }
                 }
                 catch //(Exception ex)
@@ -256,8 +258,7 @@ namespace DpCommunication
                         {
                             dpInfo.DeviceBarcode = "";
                             dpInfo.DeviceMacAddress = "";
-
-
+                            
                             string temSerialNumber = System.Text.Encoding.UTF8.GetString(incomingData, DEVICE_INFO_SERIAL_NUMBER_NUMBER_OFFSET, 10);
                             dpInfo.DeviseSerialNumber = temSerialNumber.Replace("\0", "");
 
@@ -285,12 +286,15 @@ namespace DpCommunication
                             dpInfo.DeviceMacAddress += String.Format("{0:X2}", mac[4]);
                             dpInfo.DeviceMacAddress += String.Format("{0:X2}", mac[5]);
 
+                            Console.WriteLine("Got DP info " + dpInfo.CurrentTemp);
+
                             NewDpInfoEvent = true; 
                         }
                         break;
                     case API_MSG_DP_LICENSE_ACK:
                         {
                             LicenseAck = incomingData[COM_PACKET_INDEX_MESSAGE_TYPE + 1] == 1? true: false;
+                            Console.WriteLine("Got license ack!!! "+LicenseAck);
                         }
                         break;
                     default:

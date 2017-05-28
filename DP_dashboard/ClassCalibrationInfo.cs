@@ -61,7 +61,7 @@ namespace DP_dashboard
     public class ClassCalibrationInfo
     {
 
-        private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(ClassCalibrationInfo));
 
         #region state machine states
         //state machine stats
@@ -165,6 +165,8 @@ namespace DP_dashboard
         public DateTime LastPressureSample = DateTime.Now;
         public DateTime LastOvenReadTime = DateTime.Now;
         private classLog log = new classLog();
+        private IGUI _gui = null;
+
         public bool DetectFlag = false;
         //public int JigConfiguration = 8;
         public bool EndDetectEvent = false;
@@ -172,7 +174,7 @@ namespace DP_dashboard
 
 
         public string ErrorMessage = "";
-        public string TraceInfo = "";
+        
         public bool ErrorEvent = false;
         public bool CriticalStates = false;
         public bool TempTimoutErrorEvent = false;
@@ -191,7 +193,7 @@ namespace DP_dashboard
         #endregion
 
         #region c'tor
-        public ClassCalibrationInfo(TempControllerProtocol tempControllerInstanse, ClassDpCommunication ClassDpCommunication, classMultiplexing ClassMultiplexing, classDeltaProtocol classDeltaIncomingInformation, SwVersion version)
+        public ClassCalibrationInfo(TempControllerProtocol tempControllerInstanse, ClassDpCommunication ClassDpCommunication, classMultiplexing ClassMultiplexing, classDeltaProtocol classDeltaIncomingInformation, SwVersion version, IGUI gui)
         {
 
             // DP TempController
@@ -208,6 +210,8 @@ namespace DP_dashboard
 
             //update sw/fw versions
             classCalibrationSettings = new ClassCalibrationSettings(version);
+
+            _gui = gui;
         }
         #endregion
 
@@ -256,7 +260,7 @@ namespace DP_dashboard
                             //float Tolerance =   0.05F / 6.0F * 100;
 
                             // Set pressure for 6 bar
-                            TraceInfo += "Setting pressure for leakage test..." + Environment.NewLine;
+                            _gui.UpdateTraceInfo("Setting pressure for leakage test..." + Environment.NewLine);
                             classDeltaProtocolInstanse.classDeltaWriteSetpoint(new List<short> { LeakageTestPressure });
                             
                             // Wair for stabilization
@@ -269,11 +273,11 @@ namespace DP_dashboard
                                 CurrentPressure = ReadPressureFromPlc();
                                 if ((DateTime.Now - start).TotalSeconds >= 25)
                                 {
-                                    TraceInfo += "Pressure source not stable, Process stoped" + Environment.NewLine;
+                                    _gui.UpdateTraceInfo("Pressure source not stable, Process stoped" + Environment.NewLine);
                                     return;
                                 }
                             };
-                            TraceInfo += "Pressure set. Waiting 30 second to test for leakage..." + Environment.NewLine;
+                            _gui.UpdateTraceInfo("Pressure set. Waiting 30 second to test for leakage..." + Environment.NewLine);
 
                             start = DateTime.Now;
                             while ((DateTime.Now - start).TotalSeconds < 30)
@@ -282,7 +286,7 @@ namespace DP_dashboard
                                 CurrentPressure = ReadPressureFromPlc();
                                 if (!PressureStableFlag)
                                 {
-                                    TraceInfo += "Pressure Leakage found, Process stoped" + Environment.NewLine;
+                                    _gui.UpdateTraceInfo("Pressure Leakage found, Process stoped" + Environment.NewLine);
                                     return;
                                 }
                             };
@@ -325,7 +329,7 @@ namespace DP_dashboard
                                 return;
                             }
                             */
-                            TraceInfo += "No leakage found, Process continues..." + Environment.NewLine;
+                            _gui.UpdateTraceInfo("No leakage found, Process continues..." + Environment.NewLine);
                             StateChangeState(STATE_MACHINE.StateSendTempSetPoints);
                             break;
 
@@ -361,7 +365,7 @@ namespace DP_dashboard
                                 // send 0[bar] to PLC comtroller
                                 VentToRead0Bar(); // vent system after finish calib.
 
-                                TraceInfo += "Set temp : " + classCalibrationSettings.TempUnderTestList[CurrentCalibTempIndex]+"\r\n";
+                                _gui.UpdateTraceInfo("Set temp : " + classCalibrationSettings.TempUnderTestList[CurrentCalibTempIndex]+"\r\n");
 
 
                                 WriteTempSetPoint(TEMP_SET_POINT_1_REGISTER_ADDRESSS, classCalibrationSettings.TempUnderTestList[CurrentCalibTempIndex]);
@@ -440,7 +444,7 @@ namespace DP_dashboard
                                 // timout error -> current skip time  + max time wait to temp
                                 if (CheckTimout(TimeFromSetTempPointRequest, classCalibrationSettings.MaxTimeWaitToTemp + classCalibrationSettings.TempSkipStartTime[CurrentCalibTempIndex]))
                                 {
-                                    TraceInfo += "Timeout waiting for temp set \r\n";
+                                    _gui.UpdateTraceInfo("Timeout waiting for temp set \r\n");
                                     StateChangeState(STATE_MACHINE.StateTempStableError);
 
                                     ResetPressureAndTemp();
@@ -476,7 +480,7 @@ namespace DP_dashboard
                                     StateChangeState(STATE_MACHINE.StateSendTempSetPoints);
                                     NextAfterTempTimoutErrorEvent = false;
                                 }
-                                TraceInfo += "Fail to set temperature.\r\n" + "Close calibration proccess.\r\n";
+                                _gui.UpdateTraceInfo("Fail to set temperature.\r\n" + "Close calibration proccess.\r\n");
                                 DoCalibration = false;
                                 StateMachineReset();
                             }
@@ -582,7 +586,7 @@ namespace DP_dashboard
             CurrentState = nextState;
             ChengeStateEvent = true;
 
-            Logger.Debug("Calibration state machine: from:"+ Enum.GetName(typeof(STATE_MACHINE),CurrentState) + " to:" + Enum.GetName(typeof(STATE_MACHINE), nextState));
+            Logger.Debug("Calibration state machine: from:"+ Enum.GetName(typeof(STATE_MACHINE), PreviousState) + " to:" + Enum.GetName(typeof(STATE_MACHINE), nextState));
         }
 
         /// <summary>
@@ -766,19 +770,18 @@ namespace DP_dashboard
                                 if(license != null)
                                     if (license.Length > 0)
                                         classDpCommunicationInstanse.SendDpLicense(license);
-                                TraceInfo += "Sent license wait for ack " +DateTime.Now + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " license is: " + Encoding.UTF8.GetString(license, 0, license.Length) + ".\r\n";
+                                
+                                _gui.UpdateTraceInfo ("Sent license wait for ack " +DateTime.Now + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " license is: " + Encoding.UTF8.GetString(license, 0, license.Length) + ".\r\n");
                                 Thread.Sleep(2000);
                                 if(classDpCommunicationInstanse.LicenseAck)
                                 {
                                     classDpCommunicationInstanse.LicenseAck = false;
-                                    TraceInfo +=  "License msg: SN = " + DateTime.Now   + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " license is: " + Encoding.UTF8.GetString(license, 0, license.Length) + ".\r\n";
-
-
+                                    _gui.UpdateTraceInfo("License msg: SN = " + DateTime.Now   + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " license is: " + Encoding.UTF8.GetString(license, 0, license.Length) + ".\r\n");
                                 }
                                 else
                                 {
                                     //Not license response
-                                    TraceInfo += "License Error: " +  DateTime.Now + " SN = " + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " fail to set the license.\r\n";
+                                    _gui.UpdateTraceInfo("License Error: " +  DateTime.Now + " SN = " + classDevices[DpPtr].DeviceSerialNumber + " MAC = " + classDevices[DpPtr].DeviceMacAddress + "Chanel = " + i + " fail to set the license.\r\n");
 
                                     classDevices[DpPtr].deviceStatus = DeviceStatus.Fail;
                                 }
@@ -831,7 +834,7 @@ namespace DP_dashboard
         {
             for (int i = 0; i < DpCountAxist; i++)
             {
-                TraceInfo += "\r\n" + log.PrintLogRecordToFile(classDevices[i], classCalibrationSettings.PressureUnderTestList, Properties.Settings.Default.LogPath, CurrentCalibTempIndex);
+                _gui.UpdateTraceInfo("\r\n" + log.PrintLogRecordToFile(classDevices[i], classCalibrationSettings.PressureUnderTestList, Properties.Settings.Default.LogPath, CurrentCalibTempIndex));
             }
         }
 
@@ -865,15 +868,15 @@ namespace DP_dashboard
 
                 }
                 else
-                { 
-                    TraceInfo += "Error: Fail to valid temperatue set point on oven\r\n" + "Current Target temperature on oven is " + value.ToString() + ":\r\n";
+                {
+                    _gui.UpdateTraceInfo("Error: Fail to valid temperatue set point on oven\r\n" + "Current Target temperature on oven is " + value.ToString() + ":\r\n");
                     return false;
                 }
                 
             }
             catch (Exception err)
             {
-                TraceInfo += "Error: Fail to valid temperatue set point\r\n" + "Current Target temperature on oven is " + value.ToString() + ":\r\n" + err.ToString();
+                _gui.UpdateTraceInfo("Error: Fail to valid temperatue set point\r\n" + "Current Target temperature on oven is " + value.ToString() + ":\r\n" + err.ToString());
                 return false;
             }
         }
@@ -1096,6 +1099,7 @@ namespace DP_dashboard
                     classDpCommunicationInstanse.NewDpInfoEvent = false;
                     CurrentTempOnDP = classDpCommunicationInstanse.dpInfo.CurrentTemp;
                     DpTempSamples.Add(CurrentTempOnDP);
+                    Logger.Debug("Temprature messurment #" + i + " = " + CurrentTempOnDP.ToString());
                 }
                 Thread.Sleep(classCalibrationSettings.TempSampleInterval * 1000);
             }
@@ -1107,6 +1111,9 @@ namespace DP_dashboard
                 {
                     return true;
                 }
+                Logger.Debug("Failed in temrature");
+                Logger.Debug("\t" + DpTempSamples[DpTempSamples.Count - 1].ToString() + "-" + DpTempSamples[0].ToString() + ">=" + classCalibrationSettings.TempDeltaRange);
+                Logger.Debug("\tor " + DpTempSamples.Average().ToString() + "-" + DpTempSamples[DpTempSamples.Count - 1] . ToString() + " >= " + classCalibrationSettings.TempDeltaRange.ToString());
                 return false;
             }
             return false;
@@ -1201,7 +1208,7 @@ namespace DP_dashboard
             }
             catch (Exception ex)
             {
-                TraceInfo += "Faile to add table to database.\r\n   " + ex.StackTrace.ToString() + "\r\n\r\n" + ex.InnerException.ToString() + ".\r\n\r\n";
+                _gui.UpdateTraceInfo("Faile to add table to database.\r\n   " + ex.StackTrace.ToString() + "\r\n\r\n" + ex.InnerException.ToString() + ".\r\n\r\n");
                 Logger.Error("Faile to add table to database.   " + ex.StackTrace.ToString() +"       "+  ex.InnerException.ToString());
             }
 

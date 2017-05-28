@@ -12,7 +12,7 @@
       <Value Profile="(Default)">COM5</Value>
     </Setting>
     <Setting Name="TempControllerComPort" Type="System.String" Scope="User">
-      <Value Profile="(Default)">COM4</Value>
+      <Value Profile="(Default)">COM10</Value>
     </Setting>
     <Setting Name="LogPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\work\Rotal\Rotal calibration\project\RotalCalib\DP_dashboard\bin\Debug\Logs</Value>

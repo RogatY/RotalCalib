@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SerialPort_dll
@@ -14,6 +15,7 @@ namespace SerialPort_dll
         public bool ComPortOk = true;
         public string ComPortErrorMessage = "";
         public object MessageBox { get; private set; }
+        private volatile bool _transmitSemaphore = true;
 
         public bool IsComOpen()
         {
@@ -50,10 +52,21 @@ namespace SerialPort_dll
 
         public void Send(byte[] data, int size)
         {
+            if (!_transmitSemaphore)
+            {
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+                while ((sw.ElapsedMilliseconds < 500) && (!_transmitSemaphore))
+                {
+                    Thread.Sleep(10);
+                }
+            }
+
             try
             {
                 if (port.IsOpen)
                 {
+                    _transmitSemaphore = false;
                     port.Write(data, 0, size);
                 }
             }
@@ -76,22 +89,32 @@ namespace SerialPort_dll
                         delta = DateTime.Now - start;
                         if (delta.TotalMilliseconds > timeoutMili)
                         {
+                            _transmitSemaphore = true;
                             return 0;
                         }
                     }
                     port.Read(data, 0, size);
+                    _transmitSemaphore = true;
                 }
                 return size;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+                _transmitSemaphore = true;
                 return 0;
             }
         }
 
+        public bool Semaphore
+        {
+             get { return _transmitSemaphore; } 
+             set { _transmitSemaphore = value; } 
+        }
+
         private void FixComunicationProblem()
         {
+            _transmitSemaphore = true;
             while (port.BytesToRead > 0)
             {
                 int temp;

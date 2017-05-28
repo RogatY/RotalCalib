@@ -28,8 +28,13 @@ namespace DP_dashboard
             CalibrationTool = calibrationTool;
         }
     }
+    public interface IGUI
+    {
+        void UpdateTraceInfo(string msg);
+    }
 
-    public partial class CalibForm : Form
+
+    public partial class CalibForm : Form, IGUI
     {
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -119,7 +124,7 @@ namespace DP_dashboard
             swVersions = new SwVersion("1.0.0", "", Application.ProductVersion);
             
             // Calibration class init           
-            classCalibrationInfo = new ClassCalibrationInfo(tempControllerInstanse, classDpCommunication, classMultiplexing, ClassDeltaProtocol, swVersions);
+            classCalibrationInfo = new ClassCalibrationInfo(tempControllerInstanse, classDpCommunication, classMultiplexing, ClassDeltaProtocol, swVersions, this);
 
 
 
@@ -227,12 +232,7 @@ namespace DP_dashboard
 #endif
 
             UpdateGUI();
-            if(classCalibrationInfo.TraceInfo != "")
-            {
-                rtb_info.AppendText(classCalibrationInfo.TraceInfo);
-                rtb_info.ScrollToCaret();
-                classCalibrationInfo.TraceInfo = "";
-            }
+     
 
             if (classCalibrationInfo.FinishCalibrationEvent)
             {
@@ -313,6 +313,21 @@ namespace DP_dashboard
             
 
         }
+
+        public void UpdateTraceInfo(string msg)
+        {
+            if (this.rtb_info.InvokeRequired)
+            {
+                this.Invoke(new Action(() => UpdateTraceInfo(msg)));
+            }
+            else
+            {
+                Logger.Debug(msg);
+                rtb_info.AppendText(msg);
+            }
+        }
+
+
         public void UpdateCurrentTemp(string value)
         {
             if (InvokeRequired)
