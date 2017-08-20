@@ -84,7 +84,7 @@ namespace DP_dashboard.RIT_QA
                     user.Password = "123456";
                     db.Users.Add(user);
 
-                    SaveDbChenges(db);
+                    //SaveDbChenges(db);
                 }
                 return user.Id;
             }
@@ -102,7 +102,7 @@ namespace DP_dashboard.RIT_QA
             }
             catch (Exception ex)
             {
-                Logger.Error("Save chenges failed" + "    " + ex.StackTrace.ToString() + ex.InnerException.ToString());
+                Logger.Error("Save chenges failed" + "    " + ex.StackTrace.ToString() + (ex.InnerException != null ? ex.InnerException.ToString():""));
 
                 return false;
             }

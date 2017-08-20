@@ -40,36 +40,43 @@ namespace DP_dashboard
             // ... Use HttpClient.
             using (HttpClient client = new HttpClient())
             {
-                var tResp = client.GetAsync(licenseServerUrl + dpMac + "&capabilities=" + licenseType);
-                tResp.Wait();
-                HttpResponseMessage response = tResp.Result;
-                using (HttpContent content = response.Content)
+                try
                 {
-                    try
+                    var tResp = client.GetAsync(licenseServerUrl + dpMac + "&capabilities=" + licenseType);
+                    tResp.Wait();
+                    HttpResponseMessage response = tResp.Result;
+                    using (HttpContent content = response.Content)
                     {
-                        var t = content.ReadAsStringAsync();
-                        t.Wait();
-                        string result = t.Result;
-
-
-                        int len = result.IndexOf('}') - result.IndexOf('{') + 1;
-                        result = result.Substring(result.IndexOf('{'), len);
-                        key k = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<key>(result);
-
-                        if (k.Validation)
+                        try
                         {
-                            Console.WriteLine("License !!!! " + k.Key);
-                            license = StringToByteArray(k.Key);
+                            var t = content.ReadAsStringAsync();
+                            t.Wait();
+                            string result = t.Result;
+
+
+                            int len = result.IndexOf('}') - result.IndexOf('{') + 1;
+                            result = result.Substring(result.IndexOf('{'), len);
+                            key k = new System.Web.Script.Serialization.JavaScriptSerializer().Deserialize<key>(result);
+
+                            if (k.Validation)
+                            {
+                                Console.WriteLine("License !!!! " + k.Key);
+                                license = StringToByteArray(k.Key);
+                            }
+                            else
+                            {
+                                license = null;
+                            }
                         }
-                        else
+                        catch //(Exception ex)
                         {
                             license = null;
                         }
                     }
-                    catch //(Exception ex)
-                    {
-                        license = null;
-                    }
+                }catch(Exception e)
+                {
+                    license = null;
+                    throw e;
                 }
             }
 

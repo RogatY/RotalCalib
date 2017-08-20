@@ -170,7 +170,7 @@ namespace DP_dashboard
             _capabilities |= chkDataLogger.Checked ? (byte)LICENSE_BITS.DATA_LOGGER : (byte)0;
             _capabilities |= chkWash.Checked ? (byte)LICENSE_BITS.WASH_CONTROL : (byte)0;
             calibForm.classCalibrationInfo.classCalibrationSettings.DeviceLicens = _capabilities.ToString("X2");
-
+            calibForm.UpdateTraceInfo("Current license is " + calibForm.classCalibrationInfo.classCalibrationSettings.DeviceLicens+"\r\n");
             //save station detiles
             calibForm.classCalibrationInfo.classCalibrationSettings.UserName = tb_userName.Text;
             calibForm.classCalibrationInfo.classCalibrationSettings.StationId = int.Parse(tb_stationId.Text);
@@ -178,6 +178,7 @@ namespace DP_dashboard
             //save batch
             calibForm.classCalibrationInfo.classCalibrationSettings.Batch = tb_batch.Text;
 
+            calibForm.showScanButton();
 
             this.Hide();
             calibForm.Show();

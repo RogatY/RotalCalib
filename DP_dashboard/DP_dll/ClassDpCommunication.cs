@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 using System.Threading;
 using SerialPort_dll;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+
+public interface IGUI
+{
+    void UpdateTraceInfo(string msg);
+
+    void devicesDetected();
+    void showScanButton();
+}
 
 namespace DpCommunication
 {
@@ -62,9 +71,9 @@ namespace DpCommunication
 
     public class ClassDpCommunication
     {
-        public bool NewDpInfoEvent = false;
+        private bool NewDpInfoEvent = false;
         public bool LicenseAck = false;
-
+        
 
 
         public DpInfo dpInfo = new DpInfo();
@@ -91,6 +100,7 @@ namespace DpCommunication
         private const byte MAX_PRESSURE_POINTS = 0x0f;
 
         //op cod's//
+        private const byte API_MSG_DP_SET_BARCODE             = 0x00;
         private const byte API_MSG_DP_GET_DP_INFO             = 0x01;  //opcode
         private const byte API_MSG_DP_GET_SELF_TEST           = 0x02;  //opcode
         private const byte API_MSG_DP_GET_CURRENT_TEMP        = 0x03;  //opcode
@@ -102,6 +112,8 @@ namespace DpCommunication
         private const byte API_MSG_DP_SEND_CALIBRATION_START  = 0x09;  //opcode
         private const byte API_MSG_DP_SEND_LICENSE            = 0x0A;  //opcode
         private const byte API_MSG_DP_LICENSE_ACK             = 0x0B;  //opcode
+        private const byte API_MSG_DP_RESET                   = 0x0E;
+        
 
 
         public List<DpCalibPointsInTemperature> DPPressuresTable = new List<DpCalibPointsInTemperature>();
@@ -127,10 +139,9 @@ namespace DpCommunication
         private DpIncomingInformation incomingInfo;
         public classSerial SerialPortInstanse;
         private Thread IncomingCommunicationBufferHandlerThread;
+        private IGUI _gui;
 
-
-
-        public ClassDpCommunication(string portName, int baud, DpIncomingInformation info)
+        public ClassDpCommunication(string portName, int baud, DpIncomingInformation info, IGUI gui)
         {
             IncomingCommunicationBufferHandlerThread = new Thread(ApiTask);
             SerialPortInstanse = new classSerial(portName, 115200, null);
@@ -138,6 +149,7 @@ namespace DpCommunication
 
             IncomingCommunicationBufferHandlerThread.IsBackground = false;
             IncomingCommunicationBufferHandlerThread.Start();
+            _gui = gui;
         }
         public string GetCurrentTime()
         {
@@ -154,8 +166,8 @@ namespace DpCommunication
             }
             IncomingCommunicationBufferHandlerThread = null;
         }
-
-        public bool WaitForResponse(int mSecToWait)
+               
+        private bool WaitForResponse(int mSecToWait)
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -172,6 +184,7 @@ namespace DpCommunication
             } while (sw.ElapsedMilliseconds <  mSecToWait);
             return false;
         }
+        
 
         private void ApiTask()
         {
@@ -205,9 +218,9 @@ namespace DpCommunication
                         Thread.Sleep(1);
                     }
                 }
-                catch //(Exception ex)
+                catch (Exception ex)
                 {
-
+                    _gui.UpdateTraceInfo("Serial port error " + ex.StackTrace + "\r\n");
                     //SerialPortInstanse.port.DiscardInBuffer();
                     //Array.Clear(incomingCommunicationBuffer, 0, incomingCommunicationBuffer.Length);
 
@@ -238,6 +251,7 @@ namespace DpCommunication
                 //initialize variable
                 packetType = incomingData[COM_PACKET_INDEX_MESSAGE_TYPE];
 
+                Console.WriteLine("\rRX Packet type " + incomingData[COM_PACKET_INDEX_MESSAGE_TYPE].ToString());
 
                 communicationPacketTimeLast = DateTime.Now;
 
@@ -286,7 +300,7 @@ namespace DpCommunication
                             dpInfo.DeviceMacAddress += String.Format("{0:X2}", mac[4]);
                             dpInfo.DeviceMacAddress += String.Format("{0:X2}", mac[5]);
 
-                            Console.WriteLine("Got DP info " + dpInfo.CurrentTemp);
+                            _gui.UpdateTraceInfo("Got DP info " + dpInfo.DeviceMacAddress + " " + dpInfo.CurrentTemp+" "+dpInfo.LeftA2D + " "+ dpInfo.RightA2D+" "+dpInfo.S1Pressure+" "+dpInfo.S2Pressure+"\r\n");
 
                             NewDpInfoEvent = true; 
                         }
@@ -344,6 +358,25 @@ namespace DpCommunication
             return (byte)~sumByteValue;
         }
 
+        public static string ByteArrayToString(byte[] ba)
+        {
+            StringBuilder hex = new StringBuilder(ba.Length * 2);
+            foreach (byte b in ba)
+                hex.AppendFormat("{0:x2}", b);
+            return hex.ToString();
+        }
+
+
+        public bool DpWritePressurePointToDeviceSync(float tempUnderTest, byte TempN, float extPressure, byte PreesureN, int waitTime)
+        {
+            lock (this)
+            {
+                DpWritePressurePointToDevice(tempUnderTest, TempN, extPressure, PreesureN);
+
+                return WaitForResponse(waitTime);
+            }
+        }
+
         public void DpWritePressurePointToDevice(float tempUnderTest, byte TempN, float extPressure,byte PreesureN)
         {
 
@@ -372,6 +405,8 @@ namespace DpCommunication
 
             data[data.Count() - 1] = CheckCum(data, data.Count());
 
+            _gui.UpdateTraceInfo("Send data to DP "+ByteArrayToString(data)+"\r\n");
+            SerialPortInstanse.port.DiscardInBuffer();
             SerialPortInstanse.Send(data, data.Count());
         }
 
@@ -390,16 +425,23 @@ namespace DpCommunication
             }
 
         }
-        public void DPgetDpInfo()
+        public bool DPgetDpInfoSync(int timeout)
         {
-            byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH];
-            data[0] = API_MSG_PREAMBLE;
-            data[1] = (byte)data.Count();
-            data[2] = API_MSG_DP_GET_DP_INFO;  //opcode
+            lock (this)
+            {
+                _gui.UpdateTraceInfo("Send get info \r\n");
+                Console.Write("Send get info \r\n");
+                byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH];
+                data[0] = API_MSG_PREAMBLE;
+                data[1] = (byte)data.Count();
+                data[2] = API_MSG_DP_GET_DP_INFO;  //opcode
 
-            data[data.Count() - 1] = CheckCum(data, data.Count());
+                data[data.Count() - 1] = CheckCum(data, data.Count());
 
-            SerialPortInstanse.Send(data, data.Count());
+                SerialPortInstanse.Send(data, data.Count());
+
+               return WaitForResponse(timeout);
+            }
         }
 
 
@@ -469,5 +511,55 @@ namespace DpCommunication
             data[data.Count() - 1] = CheckCum(data, data.Count());
             SerialPortInstanse.Send(data, data.Count());
         }
+
+        public void reset()
+        {
+            lock (this)
+            {
+                
+                byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH];
+                data[0] = API_MSG_DP_RESET;
+                data[1] = (byte)data.Count();
+                data[2] = API_MSG_DP_SET_BARCODE;  //opcode
+
+
+                data[data.Count() - 1] = CheckCum(data, data.Count());
+                SerialPortInstanse.Send(data, data.Count());
+            }
+        }
+
+        public void setFinalBarcode(byte[] SN)
+        {
+            byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH + SN.Length];
+            data[0] = API_MSG_DP_SET_BARCODE;
+            data[1] = (byte)data.Count();
+            data[2] = API_MSG_DP_RESET;  //opcode
+            Array.Copy(SN, 0, data, API_MSG_DP_BASIC_MASSEGE_LENGTH - 1, SN.Count());
+            
+            data[data.Count() - 1] = CheckCum(data, data.Count());
+            SerialPortInstanse.Send(data, data.Count());
+            Thread.Sleep(100);
+            reset();
+        }
     }
 }
+/*
+case etOpcodeSetBarCodeFinal :  
+
+    //Exctract device bar code
+    osal_memcpy((void*)barCode, msg->data, SERIAL_BARCODE_LENGTH);
+    //Save device bar code to SNV 
+    set_param(EE_BARCODE_ITEM_ID, SERIAL_BARCODE_LENGTH, barCode);
+
+    //Set device name to bar code number
+    //safe_osal_snv_write(DEVICE_NAME_ITEM_ID, SERIAL_BARCODE_LENGTH , barCode);
+    write_device_name(barCode);
+    //read device name
+    read_device_name();
+  
+  case   etOpcodeResetDevice:
+    //Reset the device (To apply new name)    
+    HAL_SYSTEM_RESET();
+    
+    break;
+  */

@@ -24,7 +24,8 @@ namespace DeltaPlcCommunication
         ReportSlaveID = 0x17
     }
 
-#endregion
+    #endregion
+       
 
     public struct DeltaReturnedData
     {
@@ -61,13 +62,15 @@ namespace DeltaPlcCommunication
 
 
         public bool newPressureTableReceive = false;
-        
+        private IGUI _gui;
+
         #endregion
         #region Methods
-        public classDeltaProtocol(string portName, int baud, DeltaIncomingInformation info)
+        public classDeltaProtocol(string portName, int baud, DeltaIncomingInformation info, IGUI gui)
         {
             incomingInfo = info;
             serial = new classSerial(portName, baud, null);
+            _gui = gui;
         }
 
         public bool IsComOpen()
@@ -262,14 +265,18 @@ namespace DeltaPlcCommunication
 
             if (RxMsg == "")
             {
+                _gui.UpdateTraceInfo("No response from PLC ");
                 incomingInfo.listDebugInfo.Add("No Response From unit -Check The Connection");
                 return Incoming;
             }
             // exit method if message is not valid
             //System.Diagnostics.Debug.Print(stSendBuf);
             //System.Diagnostics.Debug.Print(RxMsg);
-            if (!CheckValidMessage(RxMsg)) return Incoming;
-
+            if (!CheckValidMessage(RxMsg))
+            {
+                _gui.UpdateTraceInfo("Response from PLC is invalid "+RxMsg);
+                return Incoming;
+            }
             //kind of command
             switch (bCommand)
             {
@@ -330,9 +337,12 @@ namespace DeltaPlcCommunication
             return Result;
 
         }
+
         private DeltaReturnedData ParseReceivedBuf(string RxMsg, int Size, byte DataType)
         {
             DeltaReturnedData DRD = new DeltaReturnedData();
+                      
+
 
             if (RxMsg.Substring(0, 3).Equals(STX))
             {
@@ -345,7 +355,10 @@ namespace DeltaPlcCommunication
                             for (int i = 0; i < Size; i++)
                             {
                                 DRD.IntValue[i] = int.Parse(RxMsg.Substring(7 + (i * 4), 4), System.Globalization.NumberStyles.HexNumber);
+                                //if (DRD.IntValue[)
                             }
+
+                            
                         }
                         break;
                     case 1:
@@ -433,10 +446,13 @@ namespace DeltaPlcCommunication
 
         private string SendAndRecieveData(string tx)
         {
-            string rx= string.Empty;
+            string rx = string.Empty;
+
             incomingInfo.listDebugInfo.Add(string.Format("Tx:{0}", tx));
+
             try
             {
+                serial.port.DiscardInBuffer();
                 serial.port.WriteLine(tx + "\r\n");
                 rx = serial.port.ReadLine().Substring(2);
                 incomingInfo.listDebugInfo.Add(string.Format("Rx:{0}\r", rx));

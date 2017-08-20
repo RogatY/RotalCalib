@@ -28,13 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CalibForm));
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnl_calibrationPanel = new System.Windows.Forms.Panel();
+            this.ScanButton = new System.Windows.Forms.Button();
             this.tb_logsPath = new System.Windows.Forms.TextBox();
             this.pb_calibProgressBar = new System.Windows.Forms.ProgressBar();
-            this.tb_tempIndexAfterPause = new System.Windows.Forms.TextBox();
             this.bt_pauseStartCalib = new System.Windows.Forms.Button();
             this.bt_clear = new System.Windows.Forms.Button();
             this.rtb_info = new System.Windows.Forms.RichTextBox();
@@ -76,6 +74,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.pnl_dpSelection = new System.Windows.Forms.Panel();
+            this.Reset = new System.Windows.Forms.Button();
             this.tb_dpSN = new System.Windows.Forms.TextBox();
             this.cmb_dpList = new System.Windows.Forms.ComboBox();
             this.bt_writeSN = new System.Windows.Forms.Button();
@@ -99,16 +98,12 @@
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // timer1
-            // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // pnl_calibrationPanel
             // 
             this.pnl_calibrationPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pnl_calibrationPanel.Controls.Add(this.ScanButton);
             this.pnl_calibrationPanel.Controls.Add(this.tb_logsPath);
             this.pnl_calibrationPanel.Controls.Add(this.pb_calibProgressBar);
-            this.pnl_calibrationPanel.Controls.Add(this.tb_tempIndexAfterPause);
             this.pnl_calibrationPanel.Controls.Add(this.bt_pauseStartCalib);
             this.pnl_calibrationPanel.Controls.Add(this.bt_clear);
             this.pnl_calibrationPanel.Controls.Add(this.rtb_info);
@@ -118,13 +113,25 @@
             this.pnl_calibrationPanel.Controls.Add(this.dgv_devicesQueue);
             this.pnl_calibrationPanel.Location = new System.Drawing.Point(12, 12);
             this.pnl_calibrationPanel.Name = "pnl_calibrationPanel";
-            this.pnl_calibrationPanel.Size = new System.Drawing.Size(933, 636);
+            this.pnl_calibrationPanel.Size = new System.Drawing.Size(933, 674);
             this.pnl_calibrationPanel.TabIndex = 15;
             this.pnl_calibrationPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.pnl_calibrationPanel_Paint);
             // 
+            // ScanButton
+            // 
+            this.ScanButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ScanButton.ForeColor = System.Drawing.Color.Black;
+            this.ScanButton.Location = new System.Drawing.Point(840, 485);
+            this.ScanButton.Name = "ScanButton";
+            this.ScanButton.Size = new System.Drawing.Size(72, 33);
+            this.ScanButton.TabIndex = 22;
+            this.ScanButton.Text = "Scan";
+            this.ScanButton.UseVisualStyleBackColor = true;
+            this.ScanButton.Click += new System.EventHandler(this.ScanButton_Click);
+            // 
             // tb_logsPath
             // 
-            this.tb_logsPath.Location = new System.Drawing.Point(717, 548);
+            this.tb_logsPath.Location = new System.Drawing.Point(716, 534);
             this.tb_logsPath.Margin = new System.Windows.Forms.Padding(2);
             this.tb_logsPath.Name = "tb_logsPath";
             this.tb_logsPath.ReadOnly = true;
@@ -142,15 +149,6 @@
             this.pb_calibProgressBar.Step = 1;
             this.pb_calibProgressBar.TabIndex = 20;
             this.pb_calibProgressBar.Visible = false;
-            // 
-            // tb_tempIndexAfterPause
-            // 
-            this.tb_tempIndexAfterPause.Location = new System.Drawing.Point(840, 485);
-            this.tb_tempIndexAfterPause.Margin = new System.Windows.Forms.Padding(2);
-            this.tb_tempIndexAfterPause.Name = "tb_tempIndexAfterPause";
-            this.tb_tempIndexAfterPause.Size = new System.Drawing.Size(76, 20);
-            this.tb_tempIndexAfterPause.TabIndex = 9;
-            this.tb_tempIndexAfterPause.Text = "0";
             // 
             // bt_pauseStartCalib
             // 
@@ -363,7 +361,7 @@
             this.bt_settings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.bt_settings.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bt_settings.ForeColor = System.Drawing.Color.Black;
-            this.bt_settings.Location = new System.Drawing.Point(9, 174);
+            this.bt_settings.Location = new System.Drawing.Point(10, 193);
             this.bt_settings.Name = "bt_settings";
             this.bt_settings.Size = new System.Drawing.Size(96, 31);
             this.bt_settings.TabIndex = 19;
@@ -542,6 +540,7 @@
             // 
             this.pnl_dpSelection.BackColor = System.Drawing.SystemColors.Control;
             this.pnl_dpSelection.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pnl_dpSelection.Controls.Add(this.Reset);
             this.pnl_dpSelection.Controls.Add(this.tb_dpSN);
             this.pnl_dpSelection.Controls.Add(this.tb_newsetPresssure);
             this.pnl_dpSelection.Controls.Add(this.cmb_dpList);
@@ -554,12 +553,22 @@
             this.pnl_dpSelection.Controls.Add(this.bt_connectDP);
             this.pnl_dpSelection.Location = new System.Drawing.Point(951, 417);
             this.pnl_dpSelection.Name = "pnl_dpSelection";
-            this.pnl_dpSelection.Size = new System.Drawing.Size(283, 231);
+            this.pnl_dpSelection.Size = new System.Drawing.Size(283, 269);
             this.pnl_dpSelection.TabIndex = 13;
+            // 
+            // Reset
+            // 
+            this.Reset.Location = new System.Drawing.Point(10, 165);
+            this.Reset.Name = "Reset";
+            this.Reset.Size = new System.Drawing.Size(96, 23);
+            this.Reset.TabIndex = 21;
+            this.Reset.Text = "Reset";
+            this.Reset.UseVisualStyleBackColor = true;
+            this.Reset.Click += new System.EventHandler(this.Reset_Click);
             // 
             // tb_dpSN
             // 
-            this.tb_dpSN.Location = new System.Drawing.Point(164, 15);
+            this.tb_dpSN.Location = new System.Drawing.Point(164, 13);
             this.tb_dpSN.Margin = new System.Windows.Forms.Padding(2);
             this.tb_dpSN.Name = "tb_dpSN";
             this.tb_dpSN.Size = new System.Drawing.Size(98, 20);
@@ -731,7 +740,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1244, 660);
+            this.ClientSize = new System.Drawing.Size(1244, 698);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.pnl_dpSelection);
             this.Controls.Add(this.pnl_calibrationPanel);
@@ -759,7 +768,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Panel pnl_calibrationPanel;
         private System.Windows.Forms.Button bt_stopCalibration;
         private System.Windows.Forms.Button bt_startCalibration;
@@ -787,7 +795,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button bt_settings;
         private System.Windows.Forms.Button bt_pauseStartCalib;
-        private System.Windows.Forms.TextBox tb_tempIndexAfterPause;
         private System.Windows.Forms.TextBox tb_temperatureOnDP;
         private System.Windows.Forms.Label label10;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
@@ -820,6 +827,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn col_serialNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn DevicePositionOnBoard;
         private System.Windows.Forms.DataGridViewTextBoxColumn BoardNumber;
+        private System.Windows.Forms.Button Reset;
+        private System.Windows.Forms.Button ScanButton;
     }
 }
 

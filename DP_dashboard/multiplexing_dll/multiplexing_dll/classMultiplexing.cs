@@ -75,8 +75,17 @@ namespace multiplexing_dll
                 SerialPortInstanse.port.Close();
                 SerialPortInstanse.ComPortOk = false;
             }
-            IncomingCommunicationBufferHandlerThread.Abort();
-            IncomingCommunicationBufferHandlerThread = null;
+            try
+            {
+                IncomingCommunicationBufferHandlerThread.Abort();
+                IncomingCommunicationBufferHandlerThread = null;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            } 
+
         }
 
         private void ApiTask()

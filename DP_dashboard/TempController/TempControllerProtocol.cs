@@ -346,15 +346,15 @@ namespace TempController_dll
 
         private void WriteToFile(string header,byte [] buffer)
         {
-            header = DateTime.Now.ToString() + " " + header;
-            for (int i = 0; i < buffer.Length; i++)
-                header += String.Format("{0:X2}", buffer[i]);
+            //header = DateTime.Now.ToString() + " " + header;
+            //for (int i = 0; i < buffer.Length; i++)
+            //    header += String.Format("{0:X2}", buffer[i]);
 
-            using (StreamWriter sw = File.AppendText(@"termo.txt"))
-            {
+            //using (StreamWriter sw = File.AppendText(@"termo.txt"))
+            //{
 
-                sw.WriteLine(header);
-            }
+            //    sw.WriteLine(header);
+            //}
         }
         #endregion
 

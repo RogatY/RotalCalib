@@ -79,12 +79,21 @@ namespace SerialPort_dll
                 {
                     _transmitSemaphore = false;
                     port.Write(data, 0, size);
+                    string str = ByteArrayToString(data);
+
+                    Console.Write("\r\nTX data : " + str);
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }
+        }
+
+        public static string ByteArrayToString(byte[] ba)
+        {
+            string hex = BitConverter.ToString(ba);
+            return hex.Replace("-", "");
         }
 
         public int Recieve(byte[] data, int size, int timeoutMili = 100)
@@ -100,11 +109,16 @@ namespace SerialPort_dll
                         delta = DateTime.Now - start;
                         if (delta.TotalMilliseconds > timeoutMili)
                         {
+                            Console.Write("\r\nRX Timeout " );
                             _transmitSemaphore = true;
                             return 0;
                         }
                     }
                     port.Read(data, 0, size);
+                    string str = ByteArrayToString(data);
+
+                    Console.Write("\r\nRX data : " + str);
+
                     _transmitSemaphore = true;
                 }
                 return size;

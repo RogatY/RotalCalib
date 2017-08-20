@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "multiplexing_dll", "multiplexing_dll\multiplexing_dll\multiplexing_dll.csproj", "{E7395EE7-01D7-475A-B8D4-962641356987}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaPlcCommunication", "CalibrationPLCControlTester\DeltaPlcCommunication\DeltaPlcCommunication.csproj", "{F9134DF7-057E-4403-A914-EB584B9C7808}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C28275B2-776B-4E06-ADDD-3C84D4EF4DA7} = {C28275B2-776B-4E06-ADDD-3C84D4EF4DA7}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DP_dll", "DP_dll\DP_dll.csproj", "{C28275B2-776B-4E06-ADDD-3C84D4EF4DA7}"
 EndProject
