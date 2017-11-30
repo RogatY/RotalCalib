@@ -90,6 +90,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.btnRelief = new System.Windows.Forms.Button();
             this.pnl_calibrationPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_deviceData)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_devicesQueue)).BeginInit();
@@ -540,6 +541,7 @@
             // 
             this.pnl_dpSelection.BackColor = System.Drawing.SystemColors.Control;
             this.pnl_dpSelection.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pnl_dpSelection.Controls.Add(this.btnRelief);
             this.pnl_dpSelection.Controls.Add(this.Reset);
             this.pnl_dpSelection.Controls.Add(this.tb_dpSN);
             this.pnl_dpSelection.Controls.Add(this.tb_newsetPresssure);
@@ -736,6 +738,16 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "Target pressure";
             // 
+            // btnRelief
+            // 
+            this.btnRelief.Location = new System.Drawing.Point(11, 230);
+            this.btnRelief.Name = "btnRelief";
+            this.btnRelief.Size = new System.Drawing.Size(96, 23);
+            this.btnRelief.TabIndex = 22;
+            this.btnRelief.Text = "Relief";
+            this.btnRelief.UseVisualStyleBackColor = true;
+            this.btnRelief.Click += new System.EventHandler(this.btnRelief_Click);
+            // 
             // CalibForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -829,6 +841,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn BoardNumber;
         private System.Windows.Forms.Button Reset;
         private System.Windows.Forms.Button ScanButton;
+        private System.Windows.Forms.Button btnRelief;
     }
 }
 

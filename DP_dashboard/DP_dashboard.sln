@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DP_dashboard", "DP_dashboard.csproj", "{C7C24B9D-B15D-416C-8FC8-D7F089A8CD5E}"
 EndProject
@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TempController", "TempContr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialQueryDriver", "SerialQueryDriver\SerialQueryDriver.csproj", "{662B0588-1870-437B-B42C-FD9EC0BC1D17}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CalibrationSetup", "..\CalibrationSetup\CalibrationSetup.vdproj", "{9997C5A6-51C1-486C-87E6-9167712968B6}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CalibrationTool_Setup", "..\CalibrationTool_Setup\CalibrationTool_Setup.vdproj", "{1297C611-3FDB-48FE-AF48-C1C4A7337E4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,11 +50,15 @@ Global
 		{662B0588-1870-437B-B42C-FD9EC0BC1D17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{662B0588-1870-437B-B42C-FD9EC0BC1D17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{662B0588-1870-437B-B42C-FD9EC0BC1D17}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9997C5A6-51C1-486C-87E6-9167712968B6}.Debug|Any CPU.ActiveCfg = Debug
-		{9997C5A6-51C1-486C-87E6-9167712968B6}.Release|Any CPU.ActiveCfg = Release
-		{9997C5A6-51C1-486C-87E6-9167712968B6}.Release|Any CPU.Build.0 = Release
+		{1297C611-3FDB-48FE-AF48-C1C4A7337E4D}.Debug|Any CPU.ActiveCfg = Debug
+		{1297C611-3FDB-48FE-AF48-C1C4A7337E4D}.Debug|Any CPU.Build.0 = Debug
+		{1297C611-3FDB-48FE-AF48-C1C4A7337E4D}.Release|Any CPU.ActiveCfg = Release
+		{1297C611-3FDB-48FE-AF48-C1C4A7337E4D}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {10161519-343C-45AB-A4F0-E26A4B967BAB}
 	EndGlobalSection
 EndGlobal

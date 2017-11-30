@@ -1119,6 +1119,9 @@ namespace DP_dashboard
             classCalibrationInfo.stopScan();
         }
 
-      
+        private void btnRelief_Click(object sender, EventArgs e)
+        {
+            classCalibrationInfo.classDeltaProtocolInstanse.SendNewMessage(DeltaMsgType.ReadHoldingRegisters, DeltaMemType.D, 10, 0);
+        }
     }
 }
