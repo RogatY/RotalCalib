@@ -21,7 +21,7 @@ namespace DP_dashboard
             if (!singleton.WaitOne(TimeSpan.Zero, true))
             {
                 Logger.Warn("there is already another instance running!");
-                MessageBox.Show("There is already another instance running!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show("There is already another instance running!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                 Application.Exit();
             }
             else

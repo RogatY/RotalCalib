@@ -259,7 +259,7 @@ namespace DP_dashboard
                         classCalibrationInfo.FinishCalibrationEvent = false;
                         UpdateColorStatus();
                         UpdateDataTable(CurrentSnDeviceIsFocus);
-                        MessageBox.Show("Calibration done!");
+                        MessageBox.Show("Calibration done!","", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
 
                       
 
@@ -269,7 +269,7 @@ namespace DP_dashboard
                     {
                         classCalibrationInfo.TempTimoutErrorEvent = false;
 
-                        DialogResult result = MessageBox.Show("Fail to set temperature!", "Error", MessageBoxButtons.OK);
+                        DialogResult result = MessageBox.Show("Fail to set temperature!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                         if (result == DialogResult.OK)
                         {
                             classCalibrationInfo.NextAfterTempTimoutErrorEvent = true;
@@ -280,7 +280,7 @@ namespace DP_dashboard
                     {
                         classCalibrationInfo.PressureTimoutErrorEvent = false;
 
-                        DialogResult result = MessageBox.Show("Fail to set pressure!", "Error", MessageBoxButtons.OK);
+                        DialogResult result = MessageBox.Show("Fail to set pressure!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                         if (result == DialogResult.OK)
                         {
                             classCalibrationInfo.NextAfterPressureTimoutErrorEvent = true;
@@ -291,7 +291,7 @@ namespace DP_dashboard
                     if (classCalibrationInfo.classCalibrationSettings.AlertToTechnican)
                     {
                         classCalibrationInfo.classCalibrationSettings.AlertToTechnican = false;
-                        DialogResult result = MessageBox.Show("Pressure stable. the system wait to tachnicatan approve.", "Pressure info", MessageBoxButtons.OK);
+                        DialogResult result = MessageBox.Show("Pressure stable. the system wait to tachnicatan approve.", "Pressure info", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                         if (result == DialogResult.OK)
                         {
                             classCalibrationInfo.classCalibrationSettings.TechnicianApproveGoNext = true;
@@ -335,9 +335,9 @@ namespace DP_dashboard
 
                     Thread.Sleep(100);
                 }
-            }catch(Exception e)
+            }catch //(Exception e)
             {
-
+                
             }
 
         }
@@ -479,7 +479,7 @@ namespace DP_dashboard
 
             if (!res)
             {
-                MessageBox.Show("burn fail");
+                MessageBox.Show("burn fail", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
             }
         }
 
@@ -559,15 +559,15 @@ namespace DP_dashboard
                         {
                             if (classCalibrationInfo.DpCountExist == 0)
                             {
-                                MessageBox.Show("No exist dp devices!");
+                                MessageBox.Show("No DPS devices found!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                             }
                             else if (classCalibrationInfo.classCalibrationSettings.PressureUnderTestList.Count == 0)
                             {
-                                MessageBox.Show("Load configuration file before you calibration start");
+                                MessageBox.Show("Load configuration file before you calibration start", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                             }
                             else if (classCalibrationInfo.classCalibrationSettings.TempUnderTestList.Count == 0)
                             {
-                                MessageBox.Show("Load configuration file before you calibration start");
+                                MessageBox.Show("Load configuration file before you calibration start", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                             }
                             bt_startCalibration.Enabled = true;
                         }
@@ -582,7 +582,7 @@ namespace DP_dashboard
             }
             else
             {
-                DialogResult result = MessageBox.Show("Enter User name and Station id in config Form", "Warning", MessageBoxButtons.OK);
+                DialogResult result = MessageBox.Show("Enter User name and Station id in config Form", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
             }
         }
 
@@ -959,7 +959,7 @@ namespace DP_dashboard
             {
                 if (tb_dpSN.Text.Length < 1)
                 {
-                    MessageBox.Show("Please enter valid SN." + Environment.NewLine + ex.Message);
+                    MessageBox.Show("Please enter valid SN." + Environment.NewLine + ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                 }
 
             }
@@ -1006,8 +1006,7 @@ namespace DP_dashboard
                     string Message = string.Copy(classCalibrationInfo.classDpCommunicationInstanse.SerialPortInstanse.ComPortErrorMessage);
                     classCalibrationInfo.classDpCommunicationInstanse.SerialPortInstanse.ComPortErrorMessage = "";
 
-                    MessageBox.Show(Message);
-
+                    MessageBox.Show(Message, "DPS data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                 }
 
                 //MultiPlexer
@@ -1016,8 +1015,7 @@ namespace DP_dashboard
                     string Message = string.Copy(classCalibrationInfo.classMultiplexingInstanse.SerialPortInstanse.ComPortErrorMessage);
                     classCalibrationInfo.classMultiplexingInstanse.SerialPortInstanse.ComPortErrorMessage = "";
 
-                    MessageBox.Show(Message);
-
+                    MessageBox.Show(Message, "MultiPlexer", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                 }
 
                 //PLC-Delta
@@ -1026,8 +1024,7 @@ namespace DP_dashboard
                     string Message = string.Copy(classCalibrationInfo.classDeltaProtocolInstanse.serial.ComPortErrorMessage);
                     classCalibrationInfo.classDeltaProtocolInstanse.serial.ComPortErrorMessage = "";
 
-                    MessageBox.Show(Message);
-
+                    MessageBox.Show(Message, "PLC", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                 }
 
                 //temp controller
@@ -1036,8 +1033,7 @@ namespace DP_dashboard
                     string Message = string.Copy(classCalibrationInfo.ClassTempControllerInstanse.ComPortErrorMessage);
                     classCalibrationInfo.ClassTempControllerInstanse.ComPortErrorMessage = "";
 
-                    MessageBox.Show(Message);
-
+                    MessageBox.Show(Message, "Temperature Controller", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                 }
             }
 
@@ -1077,7 +1073,7 @@ namespace DP_dashboard
             }
             else
             {
-                MessageBox.Show("error");
+                MessageBox.Show("License setting error", "License", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
             }
         }
 
