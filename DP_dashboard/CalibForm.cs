@@ -388,7 +388,7 @@ namespace DP_dashboard
                 this.Invoke(new Action(() => UpdateCurrentPressure()));
                 return;
             }
-            tb_pressCurrentPressure.Text = classCalibrationInfo.CurrentPLCPressure.ToString();
+            tb_pressCurrentPressure.Text = classCalibrationInfo.PlcAdc2Bar(classCalibrationInfo.CurrentPLCPressure).ToString();
         }
 
         private void UpdateGUI()
@@ -1117,7 +1117,9 @@ namespace DP_dashboard
 
         private void btnRelief_Click(object sender, EventArgs e)
         {
-            classCalibrationInfo.classDeltaProtocolInstanse.SendNewMessage(DeltaMsgType.ReadHoldingRegisters, DeltaMemType.D, 10, 0);
+            List<short> data = new List<short>();
+            data.Add(10);
+            classCalibrationInfo.classDeltaProtocolInstanse.SendNewMessage(DeltaMsgType.PresetMultipleRegister, DeltaMemType.D, 306,1,data);
         }
     }
 }

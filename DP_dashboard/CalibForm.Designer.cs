@@ -74,6 +74,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.pnl_dpSelection = new System.Windows.Forms.Panel();
+            this.btnRelief = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
             this.tb_dpSN = new System.Windows.Forms.TextBox();
             this.cmb_dpList = new System.Windows.Forms.ComboBox();
@@ -90,7 +91,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.btnRelief = new System.Windows.Forms.Button();
             this.pnl_calibrationPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_deviceData)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_devicesQueue)).BeginInit();
@@ -362,9 +362,9 @@
             this.bt_settings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.bt_settings.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.bt_settings.ForeColor = System.Drawing.Color.Black;
-            this.bt_settings.Location = new System.Drawing.Point(10, 193);
+            this.bt_settings.Location = new System.Drawing.Point(9, 193);
             this.bt_settings.Name = "bt_settings";
-            this.bt_settings.Size = new System.Drawing.Size(96, 31);
+            this.bt_settings.Size = new System.Drawing.Size(118, 31);
             this.bt_settings.TabIndex = 19;
             this.bt_settings.Text = "Settings";
             this.bt_settings.UseVisualStyleBackColor = false;
@@ -385,9 +385,9 @@
             this.button2.ForeColor = System.Drawing.Color.Black;
             this.button2.Location = new System.Drawing.Point(8, 87);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(98, 31);
+            this.button2.Size = new System.Drawing.Size(119, 31);
             this.button2.TabIndex = 12;
-            this.button2.Text = "Write pressure";
+            this.button2.Text = "Write pressure [Bar]";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
@@ -406,9 +406,9 @@
             this.button1.ForeColor = System.Drawing.Color.Black;
             this.button1.Location = new System.Drawing.Point(8, 48);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(98, 31);
+            this.button1.Size = new System.Drawing.Size(119, 31);
             this.button1.TabIndex = 10;
-            this.button1.Text = "Read pressure";
+            this.button1.Text = "Read pressure [A2D]";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_2);
             // 
@@ -558,11 +558,21 @@
             this.pnl_dpSelection.Size = new System.Drawing.Size(283, 269);
             this.pnl_dpSelection.TabIndex = 13;
             // 
+            // btnRelief
+            // 
+            this.btnRelief.Location = new System.Drawing.Point(9, 230);
+            this.btnRelief.Name = "btnRelief";
+            this.btnRelief.Size = new System.Drawing.Size(118, 23);
+            this.btnRelief.TabIndex = 22;
+            this.btnRelief.Text = "Relief";
+            this.btnRelief.UseVisualStyleBackColor = true;
+            this.btnRelief.Click += new System.EventHandler(this.btnRelief_Click);
+            // 
             // Reset
             // 
-            this.Reset.Location = new System.Drawing.Point(10, 165);
+            this.Reset.Location = new System.Drawing.Point(9, 165);
             this.Reset.Name = "Reset";
-            this.Reset.Size = new System.Drawing.Size(96, 23);
+            this.Reset.Size = new System.Drawing.Size(118, 23);
             this.Reset.TabIndex = 21;
             this.Reset.Text = "Reset";
             this.Reset.UseVisualStyleBackColor = true;
@@ -609,7 +619,7 @@
             this.bt_writeSN.Location = new System.Drawing.Point(8, 7);
             this.bt_writeSN.Margin = new System.Windows.Forms.Padding(2);
             this.bt_writeSN.Name = "bt_writeSN";
-            this.bt_writeSN.Size = new System.Drawing.Size(99, 31);
+            this.bt_writeSN.Size = new System.Drawing.Size(119, 31);
             this.bt_writeSN.TabIndex = 20;
             this.bt_writeSN.Text = "Write SN(Name)";
             this.bt_writeSN.UseVisualStyleBackColor = true;
@@ -628,10 +638,10 @@
             // 
             // bt_connectDP
             // 
-            this.bt_connectDP.Location = new System.Drawing.Point(10, 129);
+            this.bt_connectDP.Location = new System.Drawing.Point(9, 129);
             this.bt_connectDP.Margin = new System.Windows.Forms.Padding(2);
             this.bt_connectDP.Name = "bt_connectDP";
-            this.bt_connectDP.Size = new System.Drawing.Size(96, 31);
+            this.bt_connectDP.Size = new System.Drawing.Size(118, 31);
             this.bt_connectDP.TabIndex = 9;
             this.bt_connectDP.Text = "Connect DP NO";
             this.bt_connectDP.UseVisualStyleBackColor = true;
@@ -723,9 +733,9 @@
             this.label1.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.label1.Location = new System.Drawing.Point(4, 42);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 13);
+            this.label1.Size = new System.Drawing.Size(112, 13);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Current  pressure";
+            this.label1.Text = "Current  pressure [Bar]";
             // 
             // label2
             // 
@@ -734,19 +744,9 @@
             this.label2.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.label2.Location = new System.Drawing.Point(4, 77);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 13);
+            this.label2.Size = new System.Drawing.Size(106, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Target pressure";
-            // 
-            // btnRelief
-            // 
-            this.btnRelief.Location = new System.Drawing.Point(11, 230);
-            this.btnRelief.Name = "btnRelief";
-            this.btnRelief.Size = new System.Drawing.Size(96, 23);
-            this.btnRelief.TabIndex = 22;
-            this.btnRelief.Text = "Relief";
-            this.btnRelief.UseVisualStyleBackColor = true;
-            this.btnRelief.Click += new System.EventHandler(this.btnRelief_Click);
+            this.label2.Text = "Target pressure [Bar]";
             // 
             // CalibForm
             // 

@@ -995,7 +995,7 @@ namespace DP_dashboard
         /// param: Int16 a2d
         /// return: float bar
         /// </summary> 
-        float PlcAdc2Bar(Int16 a2d)
+        public float PlcAdc2Bar(Int16 a2d)
         {
             float bar = 0;
             
