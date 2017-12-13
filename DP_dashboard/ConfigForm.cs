@@ -355,19 +355,9 @@ namespace DP_dashboard
 
         private void ConfigForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            calibForm.classCalibrationInfo.DoCalibration = false;
-            calibForm.classCalibrationInfo.DetectFlag = false;
+          
 
-            calibForm.ClassDeltaProtocol.CloseComPort();
-            calibForm.classDpCommunication.CloseComPort();
-            calibForm.classMultiplexing.CloseComPort();
-            calibForm.tempControllerInstanse.CloseComPort();
-
-            calibForm.Close();
-
-            Application.Exit();
-
-            //calibForm.Show();
+            calibForm.Show();
         }
 
         private void timer1_Tick(object sender, EventArgs e)

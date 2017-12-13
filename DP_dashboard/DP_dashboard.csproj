@@ -200,6 +200,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj">
+      <Project>{1E23A030-BDB9-4062-B1D2-FA7B02FCC4DD}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
     <ProjectReference Include="CalibrationPLCControlTester\DeltaPlcCommunication\DeltaPlcCommunication.csproj">
       <Project>{f9134df7-057e-4403-a914-eb584b9c7808}</Project>
       <Name>DeltaPlcCommunication</Name>

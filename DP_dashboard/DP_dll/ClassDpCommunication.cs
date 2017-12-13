@@ -7,19 +7,33 @@ using System.Threading;
 using SerialPort_dll;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-
-public interface IGUI
-{
-    void UpdateTraceInfo(string msg);
-
-    void devicesDetected();
-    void showScanButton();
-}
+using Utils;
 
 namespace DpCommunication
 {
+    public enum DpMessageType{
+        DP_MSG_ACK,
+        DP_MSG_DPINFO,
+        DP_MSG_LICENSE_ACK
+    }
 
-    public class DpInfo
+    public class DpMessage
+    {
+        public DpMessageType type;
+
+    }
+
+    public class LicenseAck : DpMessage
+    {
+        public bool res;
+
+        public LicenseAck()
+        {
+            type = DpMessageType.DP_MSG_LICENSE_ACK;
+        }
+    }
+
+    public class DpInfo : DpMessage
     {
 
         private const byte SERIAL_NUMBER_LENGTH = 0x0A;
@@ -32,7 +46,12 @@ namespace DpCommunication
         public float   S2Pressure;
         public UInt16  LeftA2D;
         public UInt16  RightA2D;
-        public byte    Calibrated;         
+        public byte    Calibrated;
+        
+        public DpInfo()
+        {
+            type = DpMessageType.DP_MSG_DPINFO;
+        }
     }
 
     public class DpIncomingInformation
@@ -48,9 +67,7 @@ namespace DpCommunication
         public float temp;                    // temperature of the current pressure value
         public float pressure;                // Physical pressure of the current a2d pressure value
         public int a2dPressureValue;          // A2D value
-
-
-
+        
         public DpCalibPoint()
         {
 
@@ -67,16 +84,14 @@ namespace DpCommunication
     {
        public List<DpCalibPoint> oneTempLine = new List<DpCalibPoint>();
     }
-
-
-    public class ClassDpCommunication
+    
+    public interface DpMessageListener
     {
-        private bool NewDpInfoEvent = false;
-        public bool LicenseAck = false;
-        
+        void onDpMessage(DpMessage msg);
+    }
 
-
-        public DpInfo dpInfo = new DpInfo();
+    public class ClassDpCommunication : DpMessageListener
+    {
         // DP info Offset 
         private const byte SERIAL_NUMBER_LENGTH             = 0x0a;
         private const byte MAC_ADDRESS_LENGTH               = 0x0C;
@@ -140,6 +155,13 @@ namespace DpCommunication
         public classSerial SerialPortInstanse;
         private Thread IncomingCommunicationBufferHandlerThread;
         private IGUI _gui;
+        public delegate void DpInfoListener (DpInfo dpInfo);
+        public delegate void LicenseAckListener(LicenseAck dpInfo);
+
+        private DpInfoListener currDpInfoListener;
+        private LicenseAckListener licenseAckListener;
+
+        private sbyte currentTempOnDp;
 
         public ClassDpCommunication(string portName, int baud, DpIncomingInformation info, IGUI gui)
         {
@@ -151,6 +173,7 @@ namespace DpCommunication
             IncomingCommunicationBufferHandlerThread.Start();
             _gui = gui;
         }
+        
         public string GetCurrentTime()
         {
             DateTime dt = new DateTime();
@@ -167,24 +190,6 @@ namespace DpCommunication
             IncomingCommunicationBufferHandlerThread = null;
         }
                
-        private bool WaitForResponse(int mSecToWait)
-        {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-            do
-            {
-                if (NewDpInfoEvent == true)
-                {
-                    NewDpInfoEvent = false;
-                    return true;
-                }                
-                Thread.Sleep(10);
-
-            } while (sw.ElapsedMilliseconds <  mSecToWait);
-            return false;
-        }
-        
 
         private void ApiTask()
         {
@@ -220,7 +225,8 @@ namespace DpCommunication
                 }
                 catch (Exception ex)
                 {
-                    _gui.UpdateTraceInfo("Serial port error " + ex.StackTrace + "\r\n");
+                    _gui.UpdateTraceInfo("Serial port error " + ex.Message + " " + ex.StackTrace + "\r\n");
+                    Thread.Sleep(2000);
                     //SerialPortInstanse.port.DiscardInBuffer();
                     //Array.Clear(incomingCommunicationBuffer, 0, incomingCommunicationBuffer.Length);
 
@@ -259,7 +265,11 @@ namespace DpCommunication
                 {
                     case API_MSG_DP_ACK_OK:
                         {
+                            DpMessage msg = new DpMessage();
 
+                            msg.type = DpMessageType.DP_MSG_ACK;
+
+                            onDpMessage(msg);
                         }
                         break;
                     case API_MSG_DP_SEND_PRESSURE_TO_DP:
@@ -270,6 +280,8 @@ namespace DpCommunication
                         break;
                     case API_MSG_DP_GET_DP_INFO:
                         {
+                            DpInfo dpInfo = new DpInfo();
+
                             dpInfo.DeviceBarcode = "";
                             dpInfo.DeviceMacAddress = "";
                             
@@ -302,18 +314,25 @@ namespace DpCommunication
 
                             _gui.UpdateTraceInfo("Got DP info " + dpInfo.DeviceMacAddress + " " + dpInfo.CurrentTemp+" "+dpInfo.LeftA2D + " "+ dpInfo.RightA2D+" "+dpInfo.S1Pressure+" "+dpInfo.S2Pressure+"\r\n");
 
-                            NewDpInfoEvent = true; 
+                            onDpMessage(dpInfo);
+                          
                         }
                         break;
                     case API_MSG_DP_LICENSE_ACK:
                         {
-                            LicenseAck = incomingData[COM_PACKET_INDEX_MESSAGE_TYPE + 1] == 1? true: false;
-                            Console.WriteLine("Got license ack!!! "+LicenseAck);
+                          
+                            LicenseAck msg = new LicenseAck();
+                            msg.res = incomingData[COM_PACKET_INDEX_MESSAGE_TYPE + 1] == 1 ? true : false; ;
+                            Console.WriteLine("Got license ack!!! "+msg.res);
+                            onDpMessage(msg);
                         }
                         break;
                     default:
                         break;
                 }
+            }else
+            {
+                _gui.UpdateTraceInfo("Invalid message CRS");
             }
         }
         
@@ -334,6 +353,11 @@ namespace DpCommunication
                 }
             }
 
+        }
+
+        public sbyte getCurrentTemp()
+        {
+            return currentTempOnDp;
         }
 
         private byte CheckCum(byte[] data, int length)
@@ -367,13 +391,23 @@ namespace DpCommunication
         }
 
 
-        public bool DpWritePressurePointToDeviceSync(float tempUnderTest, byte TempN, float extPressure, byte PreesureN, int waitTime)
+        public bool DpWritePressurePointToDeviceSync(float tempUnderTest, byte TempN, float extPressure, byte PreesureN, int waitTime, DpInfoListener listener)
         {
             lock (this)
             {
+                currDpInfoListener = listener;
+                _gui.UpdateTraceInfo("Send calibration point to device "+tempUnderTest+" "+TempN+" "+extPressure+" "+PreesureN+"\r\n");
                 DpWritePressurePointToDevice(tempUnderTest, TempN, extPressure, PreesureN);
 
-                return WaitForResponse(waitTime);
+                bool res = Monitor.Wait(this, waitTime);
+
+                if (!res)
+                {
+                    listener(null);
+                    currDpInfoListener = null;
+                }
+
+                return res;
             }
         }
 
@@ -425,7 +459,7 @@ namespace DpCommunication
             }
 
         }
-        public bool DPgetDpInfoSync(int timeout)
+        public bool DPgetDpInfoSync(int timeout, DpInfoListener listener)
         {
             lock (this)
             {
@@ -438,9 +472,22 @@ namespace DpCommunication
 
                 data[data.Count() - 1] = CheckCum(data, data.Count());
 
+                currDpInfoListener = listener;
+
                 SerialPortInstanse.Send(data, data.Count());
 
-               return WaitForResponse(timeout);
+                bool res = Monitor.Wait(this, timeout);
+
+                if (!res)
+                {
+                    listener(null);
+                    currDpInfoListener = null;
+                }
+
+                _gui.UpdateTraceInfo("Dp get info "+res+"\r\n");
+
+                return res;
+
             }
         }
 
@@ -468,48 +515,74 @@ namespace DpCommunication
 
         public void SendDpSerialNumber(byte[] serialNumber)
         {
-            byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH + serialNumber.Count()];
-            data[0] = API_MSG_PREAMBLE;
-            data[1] = (byte)data.Count();
-            data[2] = API_MSG_DP_SEND_SERIAL_NUMBER;  //opcode
-            Array.Copy(serialNumber, 0, data, API_MSG_DP_BASIC_MASSEGE_LENGTH - 1, serialNumber.Count());
-            data[data.Count() - 1] = CheckCum(data, data.Count());
+            lock (this)
+            {
+                byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH + serialNumber.Count()];
+                data[0] = API_MSG_PREAMBLE;
+                data[1] = (byte)data.Count();
+                data[2] = API_MSG_DP_SEND_SERIAL_NUMBER;  //opcode
+                Array.Copy(serialNumber, 0, data, API_MSG_DP_BASIC_MASSEGE_LENGTH - 1, serialNumber.Count());
+                data[data.Count() - 1] = CheckCum(data, data.Count());
 
-            SerialPortInstanse.Send(data, data.Count());
+                SerialPortInstanse.Send(data, data.Count());
+            }
         }
 
         public void SendEndCalibration()
         {
-            byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH];
-            data[0] = API_MSG_PREAMBLE;
-            data[1] = (byte)data.Count();
-            data[2] = API_MSG_DP_CALIBRATION_DONE;  //opcode
-            data[data.Count() - 1] = CheckCum(data, data.Count());
-            SerialPortInstanse.Send(data, data.Count());
+            lock (this)
+            {
+                byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH];
+                data[0] = API_MSG_PREAMBLE;
+                data[1] = (byte)data.Count();
+                data[2] = API_MSG_DP_CALIBRATION_DONE;  //opcode
+                data[data.Count() - 1] = CheckCum(data, data.Count());
+                SerialPortInstanse.Send(data, data.Count());
+            }
         }
 
         public void SendStartCalibration()
         {
-            byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH];
-            data[0] = API_MSG_PREAMBLE;
-            data[1] = (byte)data.Count();
-            data[2] = API_MSG_DP_SEND_CALIBRATION_START;  //opcode
-            data[data.Count() - 1] = CheckCum(data, data.Count());
-            SerialPortInstanse.Send(data, data.Count());
+            lock (this)
+            {
+                byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH];
+                data[0] = API_MSG_PREAMBLE;
+                data[1] = (byte)data.Count();
+                data[2] = API_MSG_DP_SEND_CALIBRATION_START;  //opcode
+                data[data.Count() - 1] = CheckCum(data, data.Count());
+                SerialPortInstanse.Send(data, data.Count());
+            }
         }
 
-        public void SendDpLicense(byte[] license)
+        public bool SendDpLicense(byte[] license, int timeout, LicenseAckListener listener)
         {
-            byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH + license.Length];
-            data[0] = API_MSG_PREAMBLE;
-            data[1] = (byte)data.Count();
-            data[2] = API_MSG_DP_SEND_LICENSE;  //opcode
+            lock (this)
+            {
+                byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH + license.Length];
+                data[0] = API_MSG_PREAMBLE;
+                data[1] = (byte)data.Count();
+                data[2] = API_MSG_DP_SEND_LICENSE;  //opcode
 
-            Array.Copy(license, 0, data, API_MSG_DP_BASIC_MASSEGE_LENGTH - 1, license.Count());
 
+                Array.Copy(license, 0, data, API_MSG_DP_BASIC_MASSEGE_LENGTH - 1, license.Count());
 
-            data[data.Count() - 1] = CheckCum(data, data.Count());
-            SerialPortInstanse.Send(data, data.Count());
+                licenseAckListener = listener;
+
+                data[data.Count() - 1] = CheckCum(data, data.Count());
+                SerialPortInstanse.Send(data, data.Count());
+
+                bool res = Monitor.Wait(this, timeout);
+
+                if (!res)
+                {
+                    listener(null);
+                    licenseAckListener = null;
+                }
+
+                _gui.UpdateTraceInfo("Dp write calib. point " + res + "\r\n");
+                return res;
+
+            }
         }
 
         public void reset()
@@ -530,16 +603,55 @@ namespace DpCommunication
 
         public void setFinalBarcode(byte[] SN)
         {
-            byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH + SN.Length];
-            data[0] = API_MSG_DP_SET_BARCODE;
-            data[1] = (byte)data.Count();
-            data[2] = API_MSG_DP_RESET;  //opcode
-            Array.Copy(SN, 0, data, API_MSG_DP_BASIC_MASSEGE_LENGTH - 1, SN.Count());
-            
-            data[data.Count() - 1] = CheckCum(data, data.Count());
-            SerialPortInstanse.Send(data, data.Count());
-            Thread.Sleep(100);
+            lock (this)
+            {
+                byte[] data = new byte[API_MSG_DP_BASIC_MASSEGE_LENGTH + SN.Length];
+                data[0] = API_MSG_DP_SET_BARCODE;
+                data[1] = (byte)data.Count();
+                data[2] = API_MSG_DP_RESET;  //opcode
+                Array.Copy(SN, 0, data, API_MSG_DP_BASIC_MASSEGE_LENGTH - 1, SN.Count());
+
+                data[data.Count() - 1] = CheckCum(data, data.Count());
+                SerialPortInstanse.Send(data, data.Count());
+                Thread.Sleep(100);
+               
+            }
             reset();
+        }
+
+        public void onDpMessage(DpMessage msg)
+        {
+
+            switch (msg.type)
+            {
+                case DpMessageType.DP_MSG_DPINFO:
+                    lock (this)
+                    {
+                        if (currDpInfoListener != null)
+                        {
+                            currDpInfoListener((DpInfo)msg);
+                            currentTempOnDp = ((DpInfo)msg).CurrentTemp;
+                            Monitor.Pulse(this);
+                            currDpInfoListener = null;
+                        }
+                    }
+                               
+                    break;
+                case DpMessageType.DP_MSG_LICENSE_ACK:
+                    lock (this)
+                    {
+                        if (licenseAckListener != null)
+                        {
+                            licenseAckListener((LicenseAck)msg);
+                            Monitor.Pulse(this);
+                            licenseAckListener = null;
+                        }
+                    }                   
+                    break;
+                default:
+                    break;
+            }
+            
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Timers;
 using System.IO.Ports;
+using Utils;
 
 namespace DeltaPlcCommunication
 {

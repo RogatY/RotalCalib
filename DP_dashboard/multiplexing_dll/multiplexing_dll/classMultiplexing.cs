@@ -82,7 +82,8 @@ namespace multiplexing_dll
             }
             catch (Exception e)
             {
-
+                if (e == null)
+                    e = new Exception("The exception was null ????");
                 throw e;
             } 
 

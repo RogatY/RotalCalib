@@ -12,6 +12,7 @@ using log4net;
 using System.Reflection;
 using System.Threading;
 using DP_dashboard;
+using Utils;
 
 namespace DP_dashboard
 {
@@ -29,9 +30,7 @@ namespace DP_dashboard
             CalibrationTool = calibrationTool;
         }
     }
-
-
-
+    
     public partial class CalibForm : Form, IGUI
     {
         private static readonly ILog Logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -350,23 +349,29 @@ namespace DP_dashboard
                 return;
             }
 
-            tb_temperatureOnDP.Text = classCalibrationInfo.classDpCommunicationInstanse.dpInfo.CurrentTemp.ToString();
+            tb_temperatureOnDP.Text = ""+classCalibrationInfo.classDpCommunicationInstanse.getCurrentTemp();
 
         }
 
         public void UpdateTraceInfo(string msg)
         {
-            if (this.rtb_info.InvokeRequired)
+            try
             {
-                this.Invoke(new Action(() => UpdateTraceInfo(msg)));
-            }
-            else
+                if (this.rtb_info.InvokeRequired)
+                {
+                    this.Invoke(new Action(() => UpdateTraceInfo(msg)));
+                }
+                else
+                {
+                    Logger.Debug(msg);
+                    rtb_info.AppendText(DateTime.Now.ToString("HH:mm:ss.ffff") + " " + msg);
+                    rtb_info.SelectionStart = rtb_info.Text.Length;
+                    // scroll it automatically
+                    rtb_info.ScrollToCaret();
+                }
+            }catch(Exception e)
             {
-                Logger.Debug(msg);
-                rtb_info.AppendText(DateTime.Now.ToString("HH:mm:ss.ffff") + " " + msg);
-                rtb_info.SelectionStart = rtb_info.Text.Length;
-                // scroll it automatically
-                rtb_info.ScrollToCaret();
+
             }
         }
 
@@ -504,7 +509,7 @@ namespace DP_dashboard
 
         private void bt_getDPinfo_Click(object sender, EventArgs e)
         {
-            classDpCommunication.DPgetDpInfoSync(200);
+            //classDpCommunication.DPgetDpInfoSync(200);
         }
 
         private void bt_configuration_Click(object sender, EventArgs e)
@@ -576,8 +581,11 @@ namespace DP_dashboard
                 }
                 catch (Exception ex)
                 {
-                    rtb_info.AppendText(ex.StackTrace.ToString() + "\r\n\r\n" + ex.InnerException.ToString() + ".\r\n\r\n");
-                    Logger.Error("Faile to add table to database.   " + ex.StackTrace.ToString() + "       " + ex.InnerException.ToString());
+                    if (ex.InnerException != null)
+                    {
+                        rtb_info.AppendText(ex.StackTrace.ToString() + "\r\n\r\n" + ex.InnerException.ToString() + ".\r\n\r\n");
+                        Logger.Error("Faile to add table to database.   " + ex.StackTrace.ToString() + "       " + ex.InnerException.ToString());
+                    }
                 }
             }
             else
@@ -783,10 +791,9 @@ namespace DP_dashboard
         private void bt_settings_Click(object sender, EventArgs e)
         {
             this.Hide();
-            if (ConfigFormInstanse == null)
-            {
-                ConfigFormInstanse = new ConfigForm(classDpCommunication, this, swVersions.CalibrationTool);
-            }
+           
+            ConfigFormInstanse = new ConfigForm(classDpCommunication, this, swVersions.CalibrationTool);
+           
             ConfigFormInstanse.Show();
         }
 
@@ -953,7 +960,10 @@ namespace DP_dashboard
                 byte[] SN = System.Text.Encoding.ASCII.GetBytes(tb_dpSN.Text);
                 classDpCommunication.setFinalBarcode(SN);
 
-                classDpCommunication.DPgetDpInfoSync(200);
+                classDpCommunication.DPgetDpInfoSync(200, (dpInfo) =>
+                {
+
+                });
             }
             catch (Exception ex)
             {
@@ -1065,20 +1075,20 @@ namespace DP_dashboard
 
         private void button3_Click_1(object sender, EventArgs e)
         {
-            classCalibrationInfo.classDpCommunicationInstanse.LicenseAck = false;
-            byte[] license = new LicenceSupport().GetKey("17", "");
-            if (license.Length > 0)
-                classCalibrationInfo.classDpCommunicationInstanse.SendDpLicense(license);
+            //classCalibrationInfo.classDpCommunicationInstanse.LicenseAck = false;
+            //byte[] license = new LicenceSupport().GetKey("17", "");
+            //if (license.Length > 0)
+            //    classCalibrationInfo.classDpCommunicationInstanse.SendDpLicense(license);
 
-            Thread.Sleep(1000);
-            if (classCalibrationInfo.classDpCommunicationInstanse.LicenseAck)
-            {
-                rtb_info.AppendText("succeess " + System.Text.Encoding.UTF8.GetString(license, 0, license.Length));
-            }
-            else
-            {
-                MessageBox.Show("error");
-            }
+            //Thread.Sleep(1000);
+            //if (classCalibrationInfo.classDpCommunicationInstanse.LicenseAck)
+            //{
+            //    rtb_info.AppendText("succeess " + System.Text.Encoding.UTF8.GetString(license, 0, license.Length));
+            //}
+            //else
+            //{
+            //    MessageBox.Show("error");
+            //}
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -1087,7 +1097,7 @@ namespace DP_dashboard
             rtb_info.AppendText(temp.ToString());
             rtb_info.ScrollToCaret();
 
-            classCalibrationInfo.classDpCommunicationInstanse.DPgetDpInfoSync(200);
+            //classCalibrationInfo.classDpCommunicationInstanse.DPgetDpInfoSync(200);
         }
 
         private void pnl_calibrationPanel_Paint(object sender, PaintEventArgs e)

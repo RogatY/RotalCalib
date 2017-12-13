@@ -558,6 +558,7 @@
             // 
             // Reset
             // 
+            this.Reset.Enabled = false;
             this.Reset.Location = new System.Drawing.Point(10, 165);
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(96, 23);
@@ -604,6 +605,7 @@
             // 
             // bt_writeSN
             // 
+            this.bt_writeSN.Enabled = false;
             this.bt_writeSN.Location = new System.Drawing.Point(8, 7);
             this.bt_writeSN.Margin = new System.Windows.Forms.Padding(2);
             this.bt_writeSN.Name = "bt_writeSN";
