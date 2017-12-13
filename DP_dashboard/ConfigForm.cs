@@ -260,12 +260,12 @@ namespace DP_dashboard
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message.ToString());
+                        MessageBox.Show(ex.Message.ToString(), "Configuration File", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Please choose .xls or .xlsx file only.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error); //custom messageBox to show error  
+                    MessageBox.Show("Please choose .xls or .xlsx file only.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                 }
             }
         }
@@ -346,7 +346,7 @@ namespace DP_dashboard
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString());
+                    MessageBox.Show(ex.ToString(), "Database", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, (MessageBoxOptions)0x40000);
                 }
             }
             return dtexcel;
