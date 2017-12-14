@@ -11,7 +11,6 @@ using SerialQueryDriver;
 using log4net;
 using System.Reflection;
 using System.Threading;
-using DP_dashboard;
 using Utils;
 
 namespace DP_dashboard
@@ -22,7 +21,7 @@ namespace DP_dashboard
         public string MultiPlexerFw;
         public string DpFw;
         public string CalibrationTool;
-
+        
         public SwVersion(string multiPlexerFw, string dpFw, string calibrationTool)
         {
             MultiPlexerFw = multiPlexerFw;
@@ -52,6 +51,9 @@ namespace DP_dashboard
         private DeltaIncomingInformation PLCinfo;
         private DeltaReturnedData IncumingParametersFromPLC;
         public string PlcComPortName = "NULL";
+        private DateTime secondsFromHighPressure = DateTime.Now;
+        private readonly int PRESSURE_GAP = Properties.Settings.Default.pressure_gap;
+        private readonly int PRESSURE_TIME = Properties.Settings.Default.pressure_time;
         // end   
 
         // DP protocol instance  
@@ -112,6 +114,7 @@ namespace DP_dashboard
             DpComPortName = Properties.Settings.Default.dpComPort;
             DPinfo = new DpIncomingInformation();
             classDpCommunication = new ClassDpCommunication(DpComPortName, 115200, DPinfo, this);
+
 
 
             // Temp controller protocol init
@@ -394,6 +397,31 @@ namespace DP_dashboard
                 return;
             }
             tb_pressCurrentPressure.Text = classCalibrationInfo.PlcAdc2Bar(classCalibrationInfo.CurrentPLCPressure).ToString();
+            try
+            {
+                if (float.Parse(tb_pressCurrentPressure.Text) > float.Parse(tb_pressTargetPressure.Text) + PRESSURE_GAP)
+                {
+                    if ((secondsFromHighPressure - DateTime.Now).TotalSeconds > PRESSURE_TIME)
+                    {
+                        //Relief
+                        btnRelief_Click(this, null);
+                        secondsFromHighPressure = DateTime.Now;
+                    }
+                    else
+                    {
+                        //Do nothing .... wait for time 
+                    }
+                }
+                else
+                {
+                    secondsFromHighPressure = DateTime.Now;
+                }
+            }
+            catch(Exception ex)
+            {
+                //MessageBox.Show
+                Logger.Error("Error during automatic Relief process", ex);
+            }
         }
 
         private void UpdateGUI()
