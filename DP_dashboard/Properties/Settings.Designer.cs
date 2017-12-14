@@ -49,7 +49,7 @@ namespace DP_dashboard.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("COM5")]
+        [global::System.Configuration.DefaultSettingValueAttribute("COM11")]
         public string dpComPort {
             get {
                 return ((string)(this["dpComPort"]));
@@ -122,30 +122,6 @@ namespace DP_dashboard.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("FTDIBUS\\VID_0403+PID_6001+FT94MRWKA\\0000_0")]
-        public string PlcComPortID {
-            get {
-                return ((string)(this["PlcComPortID"]));
-            }
-            set {
-                this["PlcComPortID"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("USB\\VID_0483&PID_5740\\325E355B4236_0")]
-        public string MultiplexerComPortID {
-            get {
-                return ((string)(this["MultiplexerComPortID"]));
-            }
-            set {
-                this["MultiplexerComPortID"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool WriteToDB {
             get {
@@ -153,30 +129,6 @@ namespace DP_dashboard.Properties {
             }
             set {
                 this["WriteToDB"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("FTDIBUS\\VID_0403+PID_6001+FT9FYCYCA\\0000_0")]
-        public string DpComPortID {
-            get {
-                return ((string)(this["DpComPortID"]));
-            }
-            set {
-                this["DpComPortID"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("FTDIBUS\\VID_0403+PID_6001+FT9FYCYCA\\0000_0")]
-        public string TempControllerComPortID {
-            get {
-                return ((string)(this["TempControllerComPortID"]));
-            }
-            set {
-                this["TempControllerComPortID"] = value;
             }
         }
         
@@ -230,7 +182,7 @@ namespace DP_dashboard.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2.6.007")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2.7.250")]
         public string FwVersion {
             get {
                 return ((string)(this["FwVersion"]));

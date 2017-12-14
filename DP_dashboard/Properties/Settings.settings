@@ -9,7 +9,7 @@
       <Value Profile="(Default)">COM23</Value>
     </Setting>
     <Setting Name="dpComPort" Type="System.String" Scope="User">
-      <Value Profile="(Default)">COM5</Value>
+      <Value Profile="(Default)">COM11</Value>
     </Setting>
     <Setting Name="TempControllerComPort" Type="System.String" Scope="User">
       <Value Profile="(Default)">COM10</Value>
@@ -26,20 +26,8 @@
     <Setting Name="TempControllerSlaveAddress" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="PlcComPortID" Type="System.String" Scope="User">
-      <Value Profile="(Default)">FTDIBUS\VID_0403+PID_6001+FT94MRWKA\0000_0</Value>
-    </Setting>
-    <Setting Name="MultiplexerComPortID" Type="System.String" Scope="User">
-      <Value Profile="(Default)">USB\VID_0483&amp;PID_5740\325E355B4236_0</Value>
-    </Setting>
     <Setting Name="WriteToDB" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="DpComPortID" Type="System.String" Scope="User">
-      <Value Profile="(Default)">FTDIBUS\VID_0403+PID_6001+FT9FYCYCA\0000_0</Value>
-    </Setting>
-    <Setting Name="TempControllerComPortID" Type="System.String" Scope="User">
-      <Value Profile="(Default)">FTDIBUS\VID_0403+PID_6001+FT9FYCYCA\0000_0</Value>
     </Setting>
     <Setting Name="LicenseServerURL" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://db-server:1234/license?mac=</Value>
@@ -54,7 +42,7 @@
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="FwVersion" Type="System.String" Scope="User">
-      <Value Profile="(Default)">2.6.007</Value>
+      <Value Profile="(Default)">2.7.250</Value>
     </Setting>
     <Setting Name="UserId" Type="System.String" Scope="User">
       <Value Profile="(Default)">1</Value>
