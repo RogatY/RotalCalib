@@ -124,43 +124,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E47BBC2D257010E0F8F84D2DDA40A396"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_01D7676ED33B149AAED6412CE5E526C0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A09BB4E80CA744B7CE563F743B2DFAF8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_BBE8B5C4A80743CA7E4518C408B41AD5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F91EBDC4F4A32619732A081BF1A83590"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8C382A28EAECCF373082F7381D0B30AB"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_CBC27F948533280F85CED0EA5FFD33E6"
+        "OwnerKey" = "8:_FAC3F2606305AAF13BDB53F3629BB4EC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -172,7 +136,43 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_FAC3F2606305AAF13BDB53F3629BB4EC"
+        "OwnerKey" = "8:_CBC27F948533280F85CED0EA5FFD33E6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_8C382A28EAECCF373082F7381D0B30AB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F91EBDC4F4A32619732A081BF1A83590"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_BBE8B5C4A80743CA7E4518C408B41AD5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_A09BB4E80CA744B7CE563F743B2DFAF8"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_01D7676ED33B149AAED6412CE5E526C0"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E47BBC2D257010E0F8F84D2DDA40A396"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -291,11 +291,6 @@
             "AssemblyAsmDisplayName" = "8:SerialQueryDriver, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_01D7676ED33B149AAED6412CE5E526C0"
-                    {
-                    "Name" = "8:SerialQueryDriver.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:SerialQueryDriver.dll"
             "TargetName" = "8:"
@@ -382,11 +377,6 @@
             "AssemblyAsmDisplayName" = "8:multiplexing_dll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_8C382A28EAECCF373082F7381D0B30AB"
-                    {
-                    "Name" = "8:multiplexing_dll.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:multiplexing_dll.dll"
             "TargetName" = "8:"
@@ -433,11 +423,6 @@
             "AssemblyAsmDisplayName" = "8:log4net, Version=2.0.6.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_A09BB4E80CA744B7CE563F743B2DFAF8"
-                    {
-                    "Name" = "8:log4net.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:log4net.dll"
             "TargetName" = "8:"
@@ -464,11 +449,6 @@
             "AssemblyAsmDisplayName" = "8:EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_BBE8B5C4A80743CA7E4518C408B41AD5"
-                    {
-                    "Name" = "8:EntityFramework.SqlServer.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:EntityFramework.SqlServer.dll"
             "TargetName" = "8:"
@@ -515,11 +495,6 @@
             "AssemblyAsmDisplayName" = "8:DeltaPlcCommunication, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_CBC27F948533280F85CED0EA5FFD33E6"
-                    {
-                    "Name" = "8:DeltaPlcCommunication.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:DeltaPlcCommunication.dll"
             "TargetName" = "8:"
@@ -546,11 +521,6 @@
             "AssemblyAsmDisplayName" = "8:TempController, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_E47BBC2D257010E0F8F84D2DDA40A396"
-                    {
-                    "Name" = "8:TempController.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:TempController.dll"
             "TargetName" = "8:"
@@ -577,11 +547,6 @@
             "AssemblyAsmDisplayName" = "8:DP_dll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_EC2BF2CBC2C3EEFCC679C094E21F5E52"
-                    {
-                    "Name" = "8:DP_dll.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:DP_dll.dll"
             "TargetName" = "8:"
@@ -608,11 +573,6 @@
             "AssemblyAsmDisplayName" = "8:EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_F91EBDC4F4A32619732A081BF1A83590"
-                    {
-                    "Name" = "8:EntityFramework.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:EntityFramework.dll"
             "TargetName" = "8:"
@@ -639,11 +599,6 @@
             "AssemblyAsmDisplayName" = "8:System.Net.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
                 "ScatterAssemblies"
                 {
-                    "_FAC3F2606305AAF13BDB53F3629BB4EC"
-                    {
-                    "Name" = "8:System.Net.Http.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:System.Net.Http.dll"
             "TargetName" = "8:"
@@ -756,15 +711,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Calibration tool"
-        "ProductCode" = "8:{8FB4D3B0-CC92-4BB0-9296-F8D9D3D90F30}"
-        "PackageCode" = "8:{B91B06F6-36AE-4307-92D9-31A718924A17}"
+        "ProductCode" = "8:{4740D4B7-FD64-427D-8FE9-02CC46BB2E5C}"
+        "PackageCode" = "8:{6BDB9CDA-4F02-4AAC-8BA0-7040645AF5BE}"
         "UpgradeCode" = "8:{6A5E3265-BA9A-482B-B48C-1EA3C5BDEFA9}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.10"
+        "ProductVersion" = "8:1.1.0"
         "Manufacturer" = "8:Rotal"
         "ARPHELPTELEPHONE" = "8:054-2312666"
         "ARPHELPLINK" = "8:"
@@ -1306,7 +1261,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BCCB77E6D0734B06900C337482C935F7"
             {
-            "SourcePath" = "8:..\\DP_dashboard\\obj\\Release\\DP_dashboard.exe"
+            "SourcePath" = "8:..\\DP_dashboard\\obj\\Debug\\DP_dashboard.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_E1A7416FC5E64532B94B4CAFB9766AE5"
