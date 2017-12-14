@@ -213,7 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utils\Utils.csproj">
-      <Project>{1E23A030-BDB9-4062-B1D2-FA7B02FCC4DD}</Project>
+      <Project>{1e23a030-bdb9-4062-b1d2-fa7b02fcc4dd}</Project>
       <Name>Utils</Name>
     </ProjectReference>
     <ProjectReference Include="CalibrationPLCControlTester\DeltaPlcCommunication\DeltaPlcCommunication.csproj">
@@ -251,15 +251,6 @@
       <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
       <VersionMajor>1</VersionMajor>
       <VersionMinor>7</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="VBIDE">
-      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
-      <VersionMajor>5</VersionMajor>
-      <VersionMinor>3</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>primary</WrapperTool>
       <Isolated>False</Isolated>

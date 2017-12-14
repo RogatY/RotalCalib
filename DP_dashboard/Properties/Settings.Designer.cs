@@ -203,5 +203,29 @@ namespace DP_dashboard.Properties {
                 this["UserId"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public int pressure_gap {
+            get {
+                return ((int)(this["pressure_gap"]));
+            }
+            set {
+                this["pressure_gap"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int pressure_time {
+            get {
+                return ((int)(this["pressure_time"]));
+            }
+            set {
+                this["pressure_time"] = value;
+            }
+        }
     }
 }

@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Utils\Utils.csproj">
-      <Project>{1E23A030-BDB9-4062-B1D2-FA7B02FCC4DD}</Project>
+      <Project>{1e23a030-bdb9-4062-b1d2-fa7b02fcc4dd}</Project>
       <Name>Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\DP_dll\DP_dll.csproj">

@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Diagnostics;
-using System.Timers;
-using System.IO.Ports;
 using Utils;
 
 namespace DeltaPlcCommunication
 {
-#region enumrators
+    #region enumrators
     public enum DeltaMemType { S = 0, X, Y, T, M, C, D };
 
     public enum DeltaMsgType
